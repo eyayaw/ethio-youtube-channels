@@ -1,0 +1,124 @@
+---
+title: Ethiopian YouTube Channels Statistics
+author: Eyayaw
+date: today
+date-format: long
+format: 
+  html:
+    theme: 
+     light: flatly
+     dark : darkly
+execute: 
+  warning: false
+  message: false
+code-fold: true
+code-line-numbers: true
+code-link: true
+code-tools: true
+#highlight-style: solarized
+link-external-icon: true
+link-external-newwindow: true
+---
+
+```{r}
+#| label: set up
+library(data.table)
+library(ggplot2)
+library(patchwork)
+library(ggtext)
+library(showtext)
+
+# plot options
+theme_set(theme_minimal())
+font_add("abyssinica sil", "AbyssinicaSIL-Regular.ttf")
+font_add("helvetica", "Helvetica.ttc")
+showtext_auto()
+caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span><br>Data: accessed via <span style = 'color:red;'>YouTube Data API v3</span>"
+```
+
+```{r}
+#| label: import data
+
+# pick the latest csv file
+file_path = sort(list.files("data", ".csv$", full.names = TRUE), TRUE)[[1]]
+access_time = regmatches(
+  file_path,
+  regexpr("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} [A-Z]{3}", file_path)
+)
+# access_time = sub(".*_([0-9 :-]+CET).csv$" , "\\1", file_path) # data access time
+channels_data = fread(file_path, drop = "hiddenSubscriberCount")
+```
+
+```{r}
+#| label: chart
+#| fig-width: 12
+#| fig-height: 8
+
+channels_data[, viewCountPerVideo := floor(viewCount / videoCount)]
+
+lookup = data.frame(
+  var = c("viewCount", "subscriberCount", "videoCount", "viewCountPerVideo"),
+  label = c("Views", "Subscribers", "Videos", "Views per video"),
+  color = c("#8298f8", "#52b439", "#f68060", "#55bdb4"),
+  scale = c(1e-6, 1e-3, 1, 1e-3),
+  suffix = c("mil", "k", "", "k")
+)
+
+channels_data_long = channels_data |>
+  melt(measure.vars = lookup$var, value.name = "count")
+
+ldata = channels_data_long |> split(by = "variable")
+subplots = vector("list", length(ldata))
+names(subplots) = names(ldata)
+
+for (i in seq_along(subplots)) {
+  # plot aesthetics
+  .aes = with(lookup, list(
+    fill = color[match(ldata[[i]]$variable[[1]], var)],
+    ptitle = label[match(ldata[[i]]$variable[[1]], var)],
+    scale = scale[match(ldata[[i]]$variable[[1]], var)],
+    suffix = suffix[match(ldata[[i]]$variable[[1]], var)]
+  ))
+
+  # plot
+  ggplot(ldata[[i]], aes(count, reorder(title, count))) +
+    geom_col(fill = .aes$fill, alpha = 0.6, width = 0.5) +
+    geom_text(aes(label = prettyNum(count, ",")), hjust = -0.05) +
+    scale_x_continuous(
+      labels = scales::label_number(scale = .aes$scale, suffix = .aes$suffix),
+      expand = expansion(c(0, .3))
+    ) +
+    labs(title = .aes$ptitle, x = "count", y = NULL) +
+    theme_minimal() +
+    theme(
+      legend.position = "none",
+      axis.text.y = element_text(family = "abyssinica sil"),
+      plot.margin = margin(1, 1, 1, 1, unit = "mm"),
+      plot.title = element_text(face = "bold", hjust = 0.5)
+    ) -> subplots[[i]]
+}
+
+
+# combine plots
+panel = wrap_plots(subplots, nrow = 2, ncol = 2, byrow = FALSE) +
+  plot_annotation(
+    title = "Stats about selected Ethiopian YouTube Channels",
+    subtitle = sprintf("Data access date: %s", access_time),
+    caption = caption_text,
+    theme = list(
+      plot.title = element_text(face = "bold"),
+      plot.subtitle = element_text(face = "italic"),
+      plot.caption = element_markdown(face = "italic", lineheight = 1.2),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "gray97", color = NA)
+    )
+  )
+
+print(panel)
+
+ggsave(
+  sprintf("figs/channels-plot_%s.png", access_time), panel,
+  width = 16, height = 8
+)
+```

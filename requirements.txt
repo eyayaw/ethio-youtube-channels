@@ -1,0 +1,3 @@
+google-api-python-client==2.70.0
+quarto==1.2.280
+
