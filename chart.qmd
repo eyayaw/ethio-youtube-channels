@@ -73,14 +73,13 @@ caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span>
 #| fig-height: !expr fig_height
 
 lookup = list(
-  var = c("viewCount", "subscriberCount", "videoCount", "viewCountPerVideo", "age_in_days"),
-  label = c("#Views", "#Subscribers", "#Videos", "#Views per video", "Age (#days)"),
-  color = c("#8298f8", "#52b439", "#f68060", "#55bdb4", "#912566"),
-  xupper_lim_expand_mult = c(0.18, .1, .075, .1, .1),
-  scale = c(1e-6, rep(1e-3, times = 3), 1),
+  var = c("viewCount", "subscriberCount", "videoCount", "viewCountPerVideo"),
+  label = c("#Views", "#Subscribers", "#Videos", "#Views per video"),
+  color = c("#8298f8", "#52b439", "#f68060", "#55bdb4"),
+  xupper_lim_expand_mult = c(0.01, .01, .01, .01),
   labeller = c(
-    scales::label_math(.x %*% 10^6),
-    replicate(4, scales::label_comma(suffix = "k"))
+    scales::label_number(scale = 10^-6),
+    replicate(3, scales::label_comma(scale = 1e-3, suffix = "k"))
   )
 )
 
@@ -97,17 +96,15 @@ for (.var in names(subplots)) {
    fill = color[match(.var, var)],
    ptitle = label[match(.var, var)],
    xupper_lim_expand_mult = xupper_lim_expand_mult[match(.var, var)],
-   scale = scale[match(.var, var)],
    labeller = labeller[[match(.var, var)]]
  ))
 
   # plot
   subplots[[.var]] = ldata[[.var]] |> 
     transform(
-      title = reorder(title, count), scount = count * .aes$scale,
-      hjust = ifelse(count == max(count), 1, 0)
+      title = reorder(title, count), hjust = ifelse(count == max(count), 1, 0)
       ) |> 
-    ggplot(aes(scount, title)) +
+    ggplot(aes(count, title)) +
     geom_col(fill = .aes$fill, alpha = 0.75, width = 0.9) +
     geom_label(
       aes(label = prettyNum(count, ","), hjust = hjust), 
@@ -146,10 +143,10 @@ panel = wrap_plots(subplots, byrow = TRUE) +
 print(panel)
 
 # save figure ----
-# ggsave(
-#   sprintf("figs/channels-plot_%s.png", access_time), panel,
-#   width = fig_width, height = fig_height, dpi = 320
-# )
+ggsave(
+  sprintf("figs/channels-plot_%s.png", access_time), panel,
+  width = fig_width, height = fig_height, dpi = 320
+)
 ```
 
 ```{r}
@@ -174,7 +171,9 @@ channels_data_long |>
     )
   
 ```
+
 ```{r}
+#| label: channel-views
 channels_data |>
   transform(
     title = reorder(title, viewCount),
