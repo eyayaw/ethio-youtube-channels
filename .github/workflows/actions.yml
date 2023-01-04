@@ -2,7 +2,7 @@ name: run main.py
 
 on:
   schedule:
-    - cron: '30 9 * * *' # At 23:59 every day
+    - cron: '59 23 * * *' # At 23:59 every day
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
 
       - name: run main.py
         env:
-          API_KEY: ${{ secrets.YOUTUBE_DATA_API_V3_KEY }}
+          YOUTUBE_DATA_API_V3_KEY: ${{ secrets.YOUTUBE_DATA_API_V3_KEY }}
         run: python main.py
 
       - name: commit files
