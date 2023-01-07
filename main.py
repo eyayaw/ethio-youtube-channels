@@ -1,64 +1,161 @@
-import os, time, csv, json
+import os, sys, csv, time
+from typing import Sequence
 from googleapiclient.discovery import build
 from functools import reduce
 
-API_KEY = os.getenv("YOUTUBE_DATA_API_V3_KEY")
-youtube = build("youtube", "v3", developerKey=API_KEY)
 
-# list of selected channels
-channel_list = {"handel": [], "channel_id": []}
-with open("channels-list.csv", "r") as f:
-    channels = csv.DictReader(f)
-    for row in channels:
-        channel_list["handel"].append(row["handel"])
-        channel_list["channel_id"].append(row["channel_id"])
+def get_channel_stats(api_key: str, channel_id: Sequence[str], **kwargs) -> list[dict]:
+    """Retreive channel statistics from the YouTube Data API
+
+    Args:
+        api_key (str): YouTube Data API Key
+        channel_id (Sequence[str]): A list of channel ids
+        **kwargs: args passed to the `list()` method of the `channels()` resource.
+
+    Returns:
+        list: A list of dict of channel data
+    """
+
+    if isinstance(channel_id, (list, tuple)) and len(channel_id) > 1:
+        channel_id = ", ".join(channel_id)
+
+    part = ["snippet", "statistics"]
+    fields = "items(%s)" % (", ".join(["snippet(title)","statistics(viewCount, subscriberCount, videoCount)"]))
+
+    # send the request to the youtube data api
+    youtube = build("youtube", "v3", developerKey=api_key)
+    try:
+        response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
+        access_time = time.strftime("%F %T %Z")  # data access time
+        response = response["items"]
+        # append the date at which the data was retrieved
+        for item in response:
+            item.update({"retrievedAt": {"retrievedAt": access_time}})
+    except Exception as e:
+        sys.exit(f"err={e}")
+
+    youtube.close()
+
+    return response
 
 
-# get channel info ----
-## refer https://developers.google.com/youtube/v3/getting-started#fields
+def get_channel_info_static(api_key: str, channel_id: Sequence[str], **kwargs) -> list[dict]:
+    """
+    Retreive information about the channel from the YouTube Data API.
+    Such information can be description, and topic details of the channel, country where it is located etc.
+    And, mostly these info do not change constantly, are already set. 
 
-# comma separated channel ids
-channel_ids = ", ".join(channel_list["channel_id"])
-part = "snippet, statistics, topicDetails, contentDetails"
-fields = (
+    Args:
+        api_key (str): YouTube Data API Key
+        channel_id (Sequence[str]): A list of channel ids
+        **kwargs: args passed to the `list()` method of the `channels()` resource.
+
+    Returns:
+        list: A list of dict of channel data
+    """
+
+    if isinstance(channel_id, (list, tuple)) and len(channel_id) > 1:
+        channel_id = ", ".join(channel_id)
+
+    part = ", ".join(["snippet"," topicDetails", "contentDetails"])
+    fields = (
         "snippet(title, description, publishedAt, country, thumbnails.high.url)",
-        "statistics(viewCount, subscriberCount, videoCount)",
         "topicDetails.topicCategories",
         "contentDetails.relatedPlaylists.uploads"
         )
+    fields = "items(%s)" %(", ".join(fields))
 
-response_channel = youtube.channels().list(
-    part=part, id=channel_ids, fields=f"items({', '.join(fields)})"
-    ).execute()
-response_channel = response_channel["items"]
+    # send the request to the youtube data api
+    youtube = build("youtube", "v3", developerKey=api_key)
+    try:
+        response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
+        response = response["items"]
+    except Exception as e:
+        sys.exit(f"err={e}")
 
-# # write to disk
-access_time = time.strftime("%F %T %Z")  # data access time
-stem = f"channels-data_{access_time}"
+    youtube.close()
 
-# as json
-with open(f"data/json/{stem}.json", "w") as json_file:
-    json.dump(response_channel, json_file, indent=4)
+    return response
 
-# as csv
-## flatten the first level (part) dict nesting -- removes (snipptet, statistics ...)
-response_channel = list(map(lambda item: reduce(lambda x, y: {**x, **y}, item.values()), response_channel))
-with open(f"data/{stem}.csv", "w") as csv_file:
-    # fieldnames (correspond to `fields` above)
-    fieldnames = list(response_channel[0].keys())
+
+def write_channel_info(path: str, response_channel: list[dict]):
+    if not path.endswith(".csv"):
+        raise Exception("Path `{path}` should have a `.csv` ext.")
+
+    ## flatten the first level (part) dict nesting -- removes (snipptet, ...)
+    data = list(
+        map(lambda item: reduce(lambda x, y: {**x, **y}, item.values()), response_channel)
+    )
+
+    with open(path, "w") as csv_file:
+        
+        # fieldnames (correspond to `fields` above)
+        fieldnames = list(data[0].keys())
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for item in data:
+            # flatten len 1 nested dict, alternative is pandas.json_normalize()
+            try:
+                item = item.copy()
+                item["thumbnails"] = item["thumbnails"]["high"]["url"]
+                item["relatedPlaylists"] = item["relatedPlaylists"]["uploads"]
+            except KeyError:
+                pass
+            writer.writerow(item)
     
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
-    writer.writeheader()
-    for item in response_channel:
-        # flatten len 1 nested dict, alternative is pandas.json_normalize()
-        try:
-            item = item.copy()
-            item["thumbnails"] = item["thumbnails"]["high"]["url"]
-            item["relatedPlaylists"] = item["relatedPlaylists"]["uploads"]
-        except KeyError:
-            pass
-        writer.writerow(item)
+    print(f"The data has been written to `{path}`.")
 
 
-youtube.close()
+def append_stats(path: str, response_channel: list[dict]):
+    # only statistics, snippet should be present
+    if not all([p in response_channel[0].keys() for p in ["snippet", "statistics"]]):
+        raise Exception("Only [snippet, statistics] as `part` parameter are allowed.")
+    
+    if not path.endswith(".csv"):
+        raise Exception("Path `{path}` should have a `.csv` ext.")
+    
+    ## flatten the first level (part) dict nesting -- removes (snipptet, statistics)
+    data = list(
+        map(lambda item: reduce(lambda x, y: {**x, **y}, item.values()), response_channel)
+    )
+
+    with open(path, "a") as csv_file:
+        
+        # fieldnames (correspond to `fields` above)
+        fieldnames = list(data[0].keys())
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        for item in data:
+            writer.writerow(item)
+    
+    print(f"The data (containing only stats) has been appended to `{path}`.")
+
+
+def main():
+    API_KEY = os.getenv("YOUTUBE_DATA_API_V3_KEY")
+    # list of selected channels
+    with open("channels-list.csv", "r") as f:
+        reader = csv.DictReader(f)
+        channel_list = [row["channel_id"] for row in reader]
+
+    out_dir = "data/"  # dir for writing the data to
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
+    
+    out_file = f"{out_dir}/channels-data.csv"
+
+    # get channels stats and append them
+    channel_stats = get_channel_stats(API_KEY, channel_list)
+    append_stats(out_file, channel_stats)
+
+    # static data, and write it (running once is enough)
+    channel_info_path = f"{out_dir}/channels-info.csv"
+    if not os.path.exists(channel_info_path):
+        channel_info = get_channel_info_static(API_KEY, channel_list)
+        write_channel_info(channel_info_path, channel_info)
+
+
+if __name__ == "__main__":
+    main()

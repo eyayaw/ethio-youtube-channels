@@ -31,19 +31,19 @@ library(ggtext)
 ```{r}
 #| label: import data
 
-# pick the latest csv file
-file_path = sort(list.files("data", ".csv$", full.names = TRUE), TRUE)[[1]]
-# access_time = sub(".*_([0-9 :-]+CET).csv$" , "\\1", file_path) # data access time
-access_time = regmatches(
-  file_path,
-  regexpr("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} [A-Z]{3}", file_path)
-)
-channels_data = fread(file_path, drop = "hiddenSubscriberCount")
-num_vars = names(channels_data)[sapply(channels_data, is.numeric)]
+channels_data = fread("data/channels-data.csv")
+channels_info = fread("data/channels-info.csv")
+
+channels_data = merge(channels_data, channels_info, "title")[order(retrievedAt), ]
+
+num_vars = c("viewCount", "subscriberCount", "videoCount")
 channels_data[,  (num_vars) := lapply(.SD, as.integer), .SDcols = (num_vars)]
+
+
 channels_data[, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)
               ][, viewCountPerVideo := floor(viewCount / videoCount)
-                ][, age_in_days := round(Sys.time() - publishedAt)]
+                ][, age := round(as.numeric(retrievedAt - publishedAt)/365.25, 2)
+                  ][, viewCountPerYear := viewCount/age]
 
 # shorten titles
 channels_data[, title := fcase(
@@ -53,17 +53,21 @@ channels_data[, title := fcase(
   title %like% "^EMS", "EMS", 
   title %ilike% "Tigra[iy] Media House", "TMH",
   rep(TRUE, length(title)), title)
-]
-```
+][, title := trimws(title)]
 
+
+# pick the latest
+data_latest = channels_data[retrievedAt == max(retrievedAt), ]
+```
 
 ```{r}
 #| label:  plot options
 fsize = 12
 theme_set(theme_light())
-fig_width = 18
-fig_height = 16
-subtitle = sprintf("Data access date: <span style='color:red;'>%s</span>", access_time)
+fig_width = 12
+fig_height = 0.618 * fig_width
+retrieved_at = data_latest$retrievedAt[1]
+subtitle = sprintf("Data access date: <span style='color:red;'>%s</span>", retrieved_at)
 caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span><br>Data: accessed via <span style = 'color:red;'>YouTube Data API v3</span>"
 ```
 
@@ -83,7 +87,7 @@ lookup = list(
   )
 )
 
-channels_data_long = channels_data |>
+channels_data_long = data_latest |>
   melt(measure.vars = lookup$var, value.name = "count")
 
 ldata = channels_data_long |> split(by = "variable")
@@ -140,13 +144,14 @@ panel = wrap_plots(subplots, byrow = TRUE) +
   ) 
   
 
-print(panel)
+# print(panel)
 
 # save figure ----
-ggsave(
-  sprintf("figs/channels-plot_%s.png", access_time), panel,
-  width = fig_width, height = fig_height, dpi = 320
+png_file = sprintf("figs/channels-plot_%s.png", retrieved_at)
+ggsave(png_file, panel, ragg::agg_png,
+  width = fig_width, height = fig_height, dpi = 300
 )
+knitr::include_graphics(png_file)
 ```
 
 ```{r}
@@ -174,30 +179,33 @@ channels_data_long |>
 
 ```{r}
 #| label: channel-views
-channels_data |>
+data_latest |>
   transform(
     title = reorder(title, viewCount),
     hjust = ifelse(viewCount == max(viewCount), 1, 0)
   ) |>
   ggplot(aes(x = viewCount, y = title)) +
-  geom_col(fill = "#52b439", alpha = .6, width = .9) +
+  geom_col(fill = "#52b439", alpha = .6) +
   geom_label(
     aes(label = prettyNum(viewCount, big.mark = ","), hjust = hjust),
-    size = 10 / .pt, nudge_x = .5, fill = NA, label.size = 0
+    size = 10 / .pt, nudge_x = .5, fill = "white", label.size = 0
   ) +
   scale_x_continuous(
     expand = expansion(c(.01, 0.01)),
     labels = scales::label_number(scale = 10^-6)
   ) +
   labs(
-    x = expression("#Views"~("in"~10^6)), y = NULL,
-    title = "Total number of views, for a few selected Ethiopian YouTube Channels", subtitle = subtitle, caption = caption_text
+    x = "<span>#Views (in 10<sup>6</sup>)</span>", #expression("#Views" ~ ("in" ~ 10^6)), 
+    y = NULL,
+    title = "Total number of views, for a few selected Ethiopian YouTube Channels", 
+    subtitle = subtitle, caption = caption_text
   ) +
-  # coord_cartesian(clip = "off") +
-  theme_minimal() +
+  coord_cartesian(clip = "off") +
+  theme_minimal(base_family = "serif") +
   theme(
     legend.position = "none",
     axis.text = element_text(size = .9 * fsize),
+    axis.title.x = element_markdown(),
     panel.grid.minor = element_blank(),
     panel.grid.major.y = element_blank(),
     plot.title = element_text(size = fsize, face = "bold"),
@@ -208,3 +216,43 @@ channels_data |>
   )
 ```
 
+```{r}
+scale_exp = -3
+axis_label = "subscriber"
+data_latest |>
+  transform(title = reorder(title, subscriberCount)) |> 
+  ggplot(aes(subscriberCount, title)) +
+  geom_col(fill = "#55bdb4", alpha = .5, width = .8) + 
+  geom_text(aes(label = scales::label_comma()(subscriberCount)), hjust = -0.05) +
+  scale_x_continuous(
+    labels = scales::label_number(scale = 10^scale_exp, suffix="k"),
+    expand = expansion(c(0.001, 0.12))
+    ) +
+  labs(
+    x = sprintf(
+      "<span>#%ss (in 10<sup>%s</sup>)</span>", tools::toTitleCase(axis_label), -scale_exp
+      ),
+    y = NULL,
+    title = sprintf(
+      "Total number of %ss as of <span style='color:red;'>%s</span>", axis_label, retrieved_at
+      ),
+    caption = sprintf("%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>", axis_label, caption_text)
+  ) +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_markdown(),
+    plot.title = element_markdown(face = "bold"),
+    plot.subtitle = element_markdown(face = "italic"),
+    plot.caption = element_markdown(face = "italic", hjust = 0, lineheight = 1.2, margin = margin(r=4)),
+    plot.margin = margin(t=2, r=2, b=2, l=2),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+```{r}
+#| label: table
+data_latest[, .(title, viewCount, subscriberCount, videoCount, videoCount, publishedAt, age)] |>
+  kableExtra::kable(booktabs = TRUE, fontsize = 10) |>
+  kableExtra::kable_styling(bootstrap_options = c("striped", "bordered"))
+```
