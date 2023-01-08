@@ -2,7 +2,7 @@ name: run main.py
 
 on:
   schedule:
-    - cron: '59 23 * * *' # At 23:59 every day
+    - cron: '01 23 * * *' # At 23:01 (GMT) every day
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      
+
       - name: cache python dependencies
         uses: actions/cache@v3
         with:

@@ -1,0 +1,44 @@
+---
+output: github_document
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Stats about politically-oriented Ethiopian YouTube channels
+
+The list of analyzed YouTube channels is provided below:
+
+```{r}
+channels_list = read.csv("channels-list.csv")
+
+channels_list |> 
+  transform(
+    handel = sprintf("[%s](https://youtube.com/channel/%s)", handel, channel_id)
+    ) |> 
+  {\(.x) .x[order(.x$handel), ]}() -> channels_list
+
+row.names(channels_list) = NULL
+knitr::kable(channels_list, booktabs = TRUE, row.names = TRUE)
+```
+
+> NB: These channels mainly discuss Ethiopian politics, partially or fully.
+
+## Latest stats
+
+```{r}
+#| label: latest-stats
+
+stats = data.table::fread("data/channels-data.csv") |> 
+  tail(nrow(channels_list)) |> 
+  transform(retrievedAt = as.POSIXct(retrievedAt, "utc"))
+
+ltime = (stats$retrievedAt)[1]
+knitr::kable(stats[, -match("retrievedAt", names(stats)), with=FALSE], caption = sprintf("Latest stats as of %s", ltime))
+```
+
+```{r}
+knitr::include_graphics(sprintf("figs/channels-plot_%s.png", substr(ltime, 1, 19)))
+```

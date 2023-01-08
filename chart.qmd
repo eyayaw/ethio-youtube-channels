@@ -40,7 +40,8 @@ num_vars = c("viewCount", "subscriberCount", "videoCount")
 channels_data[,  (num_vars) := lapply(.SD, as.integer), .SDcols = (num_vars)]
 
 
-channels_data[, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)
+channels_data[, retrievedAt := as.POSIXct(retrievedAt, "utc")
+              ][, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)
               ][, viewCountPerVideo := floor(viewCount / videoCount)
                 ][, age := round(as.numeric(retrievedAt - publishedAt)/365.25, 2)
                   ][, viewCountPerYear := viewCount/age]
@@ -154,28 +155,6 @@ ggsave(png_file, panel, ragg::agg_png,
 knitr::include_graphics(png_file)
 ```
 
-```{r}
-#| eval: false
-channels_data_long |> 
- # transform(title=reorder(paste0(variable, "-", title), count)) |> 
- transform(title=reorder(title, count)) |> 
-  ggplot(aes(count, title)) +
-    geom_col(aes(fill=variable), alpha = 0.6, width = 0.5) +
-    geom_text(aes(label = prettyNum(count, ",")), hjust = -0.05) +
-    scale_x_continuous(
-      labels = scales::label_number(scale = 1e-3, suffix = "k"),
-      expand = expansion(c(0, .3))
-    ) + 
-    # scale_y_discrete(labels=with(channels_data_long, setNames(title, paste0(variable, "-", title)))) + 
-    labs(x = "count", y = NULL) +
-    facet_wrap(~variable, scales="free") + 
-    theme(
-      legend.position = "none",
-      plot.margin = margin(1, 1, 1, 1, unit = "mm"),
-      plot.title = element_text(face = "bold", hjust = 0.5)
-    )
-  
-```
 
 ```{r}
 #| label: channel-views
@@ -214,6 +193,11 @@ data_latest |>
     plot.background = element_rect(fill = "gray97", color = NA),
     plot.margin = margin(2, 2, 2, 2, unit = "mm")
   )
+
+# save figure ----
+png_file = sprintf("figs/channels-plot_views_%s.png", retrieved_at)
+ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
+#knitr::include_graphics(png_file)
 ```
 
 ```{r}
@@ -248,6 +232,12 @@ data_latest |>
     panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank()
   )
+
+# save figure ----
+png_file = sprintf("figs/channels-plot_subscribers_%s.png", retrieved_at)
+ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
+#knitr::include_graphics(png_file)
+
 ```
 
 ```{r}
