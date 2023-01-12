@@ -1,8 +1,8 @@
-import os, sys, csv, time
+import os, sys, csv
 from typing import Sequence
 from googleapiclient.discovery import build
 from functools import reduce
-
+from datetime import datetime, timezone
 
 def get_channel_stats(api_key: str, channel_id: Sequence[str], **kwargs) -> list[dict]:
     """Retreive channel statistics from the YouTube Data API
@@ -26,11 +26,11 @@ def get_channel_stats(api_key: str, channel_id: Sequence[str], **kwargs) -> list
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
         response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
-        access_time = time.strftime("%F %T %Z")  # data access time
+        retrieved_at = datetime.strftime(datetime.now(timezone.utc), "%F %T %Z")
         response = response["items"]
-        # append the date at which the data was retrieved
+        # append the date at which the data was retrieved to each channel result
         for item in response:
-            item.update({"retrievedAt": {"retrievedAt": access_time}})
+            item.update({"retrievedAt": {"retrievedAt": retrieved_at}})
     except Exception as e:
         sys.exit(f"err={e}")
 
@@ -69,7 +69,9 @@ def get_channel_info_static(api_key: str, channel_id: Sequence[str], **kwargs) -
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
         response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
+        retrieved_at = datetime.strftime(datetime.now(timezone.utc), "%F %T %Z")
         response = response["items"]
+        print("Data accessed at: " + retrieved_at)
     except Exception as e:
         sys.exit(f"err={e}")
 

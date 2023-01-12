@@ -1,4 +1,3 @@
-
 # Stats about politically-oriented Ethiopian YouTube channels
 
 The list of analyzed YouTube channels is provided below:
@@ -24,8 +23,7 @@ The list of analyzed YouTube channels is provided below:
 | 17  | [TeraraNetwork](https://youtube.com/channel/UC_f89AbX5NPU77YaoaSKRSg)          | UC_f89AbX5NPU77YaoaSKRSg |
 | 18  | [TigraiMediaHouse](https://youtube.com/channel/UCBvvcSYeDriczyImdI1qZWw)       | UCBvvcSYeDriczyImdI1qZWw |
 
-> NB: These channels mainly discuss Ethiopian politics, partially or
-> fully.
+> NB: These channels mainly discuss Ethiopian politics, partially or fully.
 
 ## Latest stats
 
@@ -52,4 +50,4 @@ The list of analyzed YouTube channels is provided below:
 
 Latest stats as of 2023-01-08 00:09:16
 
-<img src="figs/channels-plot_2023-01-08 00:09:16.png" width="3600" />
+<img src="figs/channels-plot_2023-01-08 00:09:16.png" width="3600"/>
