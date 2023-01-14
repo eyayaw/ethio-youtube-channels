@@ -31,6 +31,7 @@ def get_channel_stats(api_key: str, channel_id: Sequence[str], **kwargs) -> list
         # append the date at which the data was retrieved to each channel result
         for item in response:
             item.update({"retrievedAt": {"retrievedAt": retrieved_at}})
+        response = sorted(response, key=lambda x: x["snippet"]["title"])
     except Exception as e:
         sys.exit(f"err={e}")
 
@@ -71,6 +72,7 @@ def get_channel_info_static(api_key: str, channel_id: Sequence[str], **kwargs) -
         response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
         retrieved_at = datetime.strftime(datetime.now(timezone.utc), "%F %T %Z")
         response = response["items"]
+        response = sorted(response, key=lambda x: x["snippet"]["title"])
         print("Data accessed at: " + retrieved_at)
     except Exception as e:
         sys.exit(f"err={e}")
