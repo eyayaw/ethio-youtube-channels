@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Stats about politically-oriented Ethiopian YouTube channels
 
-The list of analyzed YouTube channels is provided below:
+Here is the list of the YouTube channels:
 
 ```{r}
 channels_list = read.csv("channels-list.csv")

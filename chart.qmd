@@ -35,16 +35,15 @@ channels_data = fread("data/channels-data.csv")
 channels_info = fread("data/channels-info.csv")
 
 channels_data = merge(channels_data, channels_info, "title")[order(retrievedAt), ]
+channels_data[, retrievedAt := as.POSIXct(retrievedAt, "utc")]
 
 num_vars = c("viewCount", "subscriberCount", "videoCount")
 channels_data[,  (num_vars) := lapply(.SD, as.integer), .SDcols = (num_vars)]
 
-
-channels_data[, retrievedAt := as.POSIXct(retrievedAt, "utc")
-              ][, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)
-              ][, viewCountPerVideo := floor(viewCount / videoCount)
+channels_data[, viewCountPerVideo := floor(viewCount / videoCount)
                 ][, age := round(as.numeric(retrievedAt - publishedAt)/365.25, 2)
-                  ][, viewCountPerYear := viewCount/age]
+                  ][, viewCountPerYear := viewCount/age
+                    ][, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)]
 
 # shorten titles
 channels_data[, title := fcase(
@@ -214,13 +213,17 @@ data_latest |>
     ) +
   labs(
     x = sprintf(
-      "<span>#%ss (in 10<sup>%s</sup>)</span>", tools::toTitleCase(axis_label), -scale_exp
+      "<span>#%ss (in 10<sup>%s</sup>)</span>", 
+      tools::toTitleCase(axis_label), -scale_exp
       ),
     y = NULL,
     title = sprintf(
-      "Total number of %ss as of <span style='color:red;'>%s</span>", axis_label, retrieved_at
+      "Total number of %ss as of <span style='color:red;'>%s</span>",
+      axis_label, retrieved_at
       ),
-    caption = sprintf("%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>", axis_label, caption_text)
+    caption = sprintf(
+"%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>", 
+axis_label, caption_text)
   ) +
   theme(
     legend.position = "none",
@@ -239,6 +242,58 @@ ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
 #knitr::include_graphics(png_file)
 
 ```
+
+
+```{r}
+#| label: custom functions
+flipped_bar_plot <-
+  function(data, x, y, label, ..., geom.col.params = list(), geom.text.params = list()) {
+    geom.col.params = modifyList(list(...), geom.col.params)
+    geom.text.params = modifyList(list(...), geom.text.params)
+    ggplot(data = data, mapping = aes({{ x }}, y = reorder({{ y }}, {{ x }}), label = {{ label }}), ...) +
+      do.call("geom_col", modifyList(list(fill = "#55bdb4", alpha = .5, width = .8), geom.col.params)) +
+      do.call("geom_text", modifyList(list(hjust = -0.05), geom.text.params)) +
+      scale_x_continuous(
+        expand = expansion(c(0, 0.1))
+      ) +
+      ylab(NULL)
+  }
+```
+
+```{r}
+flipped_bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
+```
+
+
+```{r}
+weekly_ts_plot <-
+  function(data, date_var, series_var, ..., geom.point.pars = list(), geom.line.pars = list()) {
+    default.line.pars = list(linewidth = 1.01, color = "#55bdb4")
+    default.point.pars = list(size = 9 / .pt, color = "#55bdb4")
+    ggplot(data, mapping = aes(x = {{ date_var }}, y = {{ series_var }}, ...)) +
+      do.call("geom_line", modifyList(default.line.pars, geom.line.pars)) +
+      do.call("geom_point", modifyList(default.point.pars, geom.point.pars)) +
+      xlab("Date") +
+      scale_y_continuous(labels = scales::label_number(scale = 1e-3, suffix = "k")) +
+      scale_x_date(
+        date_breaks = "2 days",
+        date_labels = "%b %d",
+        expand = expansion(c(0.01, 0.01))
+      )
+  }
+```
+
+```{r}
+ p = channels_data |>
+  subset(retrievedAt >= "2023-01-01") |>
+  DT(order(retrievedAt, title),
+    .(retrievedAt = as.Date(retrievedAt), daily_views = viewCount - shift(viewCount)), title
+    ) |> 
+  weekly_ts_plot(retrievedAt, daily_views) +
+  ylab(expression(Delta ~ "Total Views"))
+```
+
+
 
 ```{r}
 #| label: table
