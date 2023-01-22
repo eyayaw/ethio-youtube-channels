@@ -40,5 +40,6 @@ knitr::kable(stats[, -match("retrievedAt", names(stats)), with=FALSE], caption =
 ```
 
 ```{r}
+#| eval: false
 knitr::include_graphics(sprintf("figs/channels-plot_%s.png", substr(ltime, 1, 19)))
 ```

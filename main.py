@@ -26,7 +26,7 @@ def get_channel_stats(api_key: str, channel_id: Sequence[str], **kwargs) -> list
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
         response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
-        retrieved_at = datetime.strftime(datetime.now(timezone.utc), "%F %T %Z")
+        retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z") #datetime.utcnow().strftime("%F %T UTC")
         response = response["items"]
         # append the date at which the data was retrieved to each channel result
         for item in response:
@@ -70,7 +70,7 @@ def get_channel_info_static(api_key: str, channel_id: Sequence[str], **kwargs) -
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
         response = youtube.channels().list(part=part, id=channel_id, fields=fields, **kwargs).execute()
-        retrieved_at = datetime.strftime(datetime.now(timezone.utc), "%F %T %Z")
+        retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z")
         response = response["items"]
         response = sorted(response, key=lambda x: x["snippet"]["title"])
         print("Data accessed at: " + retrieved_at)
@@ -125,12 +125,17 @@ def append_stats(path: str, response_channel: list[dict]):
         map(lambda item: reduce(lambda x, y: {**x, **y}, item.values()), response_channel)
     )
 
+    file_exists = os.path.exists(path)
     with open(path, "a") as csv_file:
         
         # fieldnames (correspond to `fields` above)
         fieldnames = list(data[0].keys())
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
+        
+        # when a new file is created (i.e., every month), write the header
+        if not file_exists:
+            writer.writeheader()
+    
         for item in data:
             writer.writerow(item)
     
@@ -147,8 +152,9 @@ def main():
     out_dir = "data/"  # dir for writing the data to
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
-    
-    out_file = f"{out_dir}/channels-data.csv"
+    # put each month data seprately, otherwise we'll have a huge csv file
+    mon_year = datetime.now(timezone.utc).strftime("%m-%Y")
+    out_file = f"{out_dir}/channels-data_{mon_year}.csv"
 
     # get channels stats and append them
     channel_stats = get_channel_stats(API_KEY, channel_list)

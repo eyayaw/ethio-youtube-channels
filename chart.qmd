@@ -31,7 +31,7 @@ library(ggtext)
 ```{r}
 #| label: import data
 
-channels_data = fread("data/channels-data.csv")
+channels_data = fread("data/channels-data_01-2023.csv")
 channels_info = fread("data/channels-info.csv")
 
 channels_data = merge(channels_data, channels_info, "title")[order(retrievedAt), ]
@@ -52,6 +52,7 @@ channels_data[, title := fcase(
   title == "Feta Daily News", "Feta Daily", 
   title %like% "^EMS", "EMS", 
   title %ilike% "Tigra[iy] Media House", "TMH",
+  title %ilike% "menelik television 2", "Menelik TV 2",
   rep(TRUE, length(title)), title)
 ][, title := trimws(title)]
 
@@ -245,23 +246,11 @@ ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
 
 
 ```{r}
-#| label: custom functions
-flipped_bar_plot <-
-  function(data, x, y, label, ..., geom.col.params = list(), geom.text.params = list()) {
-    geom.col.params = modifyList(list(...), geom.col.params)
-    geom.text.params = modifyList(list(...), geom.text.params)
-    ggplot(data = data, mapping = aes({{ x }}, y = reorder({{ y }}, {{ x }}), label = {{ label }}), ...) +
-      do.call("geom_col", modifyList(list(fill = "#55bdb4", alpha = .5, width = .8), geom.col.params)) +
-      do.call("geom_text", modifyList(list(hjust = -0.05), geom.text.params)) +
-      scale_x_continuous(
-        expand = expansion(c(0, 0.1))
-      ) +
-      ylab(NULL)
-  }
+
 ```
 
 ```{r}
-flipped_bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
+bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
 ```
 
 
