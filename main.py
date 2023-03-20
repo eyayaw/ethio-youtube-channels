@@ -1,13 +1,13 @@
-
-# %% imports ----
+# imports ----
+# %%
 import os
 import csv
 from googleapiclient.discovery import build
 from datetime import datetime, timezone
 
-# %% helper ----
-
-def flatten_dict(d, parent_key='', sep='.'):
+# helper ----
+# %%
+def flatten_dict(d: dict, parent_key: str = '', sep: str = '.') -> dict:
     """
     Flattens a nested dictionary by concatenating keys with a separator.
 
@@ -37,8 +37,8 @@ def flatten_dict(d, parent_key='', sep='.'):
 class ChannelError(ValueError):
     pass
 
-# %% retrievers ----
-
+# retrievers ----
+# %%
 def get_channel_info_static(api_key: str, channel_ids: list[str], **kwargs) -> list[dict]:
     """
     Retreive information about the channel from the YouTube Data API.
@@ -55,9 +55,7 @@ def get_channel_info_static(api_key: str, channel_ids: list[str], **kwargs) -> l
         list: A list of dict of channel data.
     """
 
-    if not isinstance(channel_ids, list):
-        channel_ids = list(channel_ids)
-    if len(channel_ids) > 1:
+    if isinstance(channel_ids, list) and len(channel_ids) > 1:
         channel_ids = ", ".join(channel_ids)
 
     part = ", ".join(["id", "snippet", "topicDetails", "contentDetails"])
@@ -103,9 +101,7 @@ def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[di
         list: A list of dict of channel data.
     """
 
-    if isinstance(channel_ids, list):
-        channel_ids = list(channel_ids)
-    if len(channel_ids) > 1:
+    if isinstance(channel_ids, list) and len(channel_ids) > 1:
         channel_ids = ", ".join(channel_ids)
 
     part = ["snippet", "statistics"]
@@ -135,7 +131,8 @@ def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[di
     return response_items
 
 
-# %% writers ----
+# writers ----
+# %%
 def write_channel_info(path: str, response_items: list[dict]):
     """
     Writes channel information to a CSV file.
@@ -189,7 +186,8 @@ def append_stats(path: str, response_items: list[dict]):
 
     print(f"The data (containing only stats) have been appended to `{path}`.")
 
-# %% def main ----
+# def main ----
+# %%
 def main():
     API_KEY = os.getenv("YOUTUBE_DATA_API_V3_KEY")
     # list of selected channels
@@ -231,6 +229,7 @@ def main():
         else:
             write_channel_info(channel_info_path, channel_info)
 
-
+# run main() ----
+# %%
 if __name__ == "__main__":
     main()
