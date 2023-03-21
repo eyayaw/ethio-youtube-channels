@@ -195,7 +195,7 @@ def main():
         reader = csv.DictReader(f)
         channel_ids = [row["channel_id"] for row in reader]
 
-    out_dir = "./"  # dir for writing the data to
+    out_dir = "data/"  # dir for writing the data to
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
     # put each month data seprately, otherwise we'll have a huge csv file
