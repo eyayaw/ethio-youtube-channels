@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'data/channels-data_*-*.csv'
+  workflow_dispatch:
 
 jobs:
   render-readme:
