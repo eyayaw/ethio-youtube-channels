@@ -163,7 +163,7 @@ def write_channel_info(path: str, response_items: list[dict]):
     print(f"The data has been written to `{path}`.")
 
 
-def append_stats(path: str, response_items: list[dict]):
+def write_channel_stats(path: str, response_items: list[dict]):
     # only statistics, snippet should be present
     if not all([p in response_items[0].keys() for p in ["snippet", "statistics"]]):
         raise Exception("Only [snippet, statistics] as `part` parameter are allowed.")
@@ -202,13 +202,13 @@ def main():
     mon_year = datetime.now(timezone.utc).strftime("%m-%Y")
     out_file = f"{out_dir}/channels-data_{mon_year}.csv"
 
-    # get channels stats and append them
+    # get channels stats and write/append them
     try:
         channel_stats = get_channel_stats(API_KEY, channel_ids)
     except SystemExit:
         pass
     else:
-        append_stats(out_file, channel_stats)
+        write_channel_stats(out_file, channel_stats)
 
     # get static data, and write to csv file
     ## gets executed if new channel is added to `channels-list.csv`

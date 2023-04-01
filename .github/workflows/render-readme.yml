@@ -1,0 +1,42 @@
+name: Render README
+
+on:
+  push:
+    paths:
+      - 'README.qmd'
+
+jobs:
+  render-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Setup R
+      uses: r-lib/actions/setup-r@v1
+
+    - name: Install Quarto
+      run: |
+        python -m pip install quarto
+
+    - name: Install R dependencies
+      run: |
+        install.packages('knitr')
+
+    - name: Render README.qmd
+      run: |
+        quarto render README.qmd
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "Render README.qmd to README.md" || echo "No changes to commit"
+        git push

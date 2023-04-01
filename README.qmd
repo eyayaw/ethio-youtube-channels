@@ -1,11 +1,8 @@
 ---
-output: github_document
+format: gfm
+execute:
+  echo: false
 ---
-
-```{r}
-#| include: false
-knitr::opts_chunk$set(echo = FALSE)
-```
 
 # Stats about politically-oriented Ethiopian YouTube channels
 
@@ -14,10 +11,10 @@ Here is the list of the YouTube channels:
 ```{r}
 channels_list = read.csv("channels-list.csv")
 
-channels_list |> 
+channels_list |>
   transform(
     handel = sprintf("[%s](https://youtube.com/channel/%s)", handel, channel_id)
-    ) |> 
+    ) |>
   {\(.x) .x[order(.x$handel), ]}() -> channels_list
 
 row.names(channels_list) = NULL
@@ -30,16 +27,18 @@ knitr::kable(channels_list, booktabs = TRUE, row.names = TRUE)
 
 ```{r}
 #| label: latest-stats
+file_path = dir("data/", "channels-data_\\d{2}-\\d{4}[.]csv", full.names = TRUE) |>
+  sort(decreasing = TRUE) |>
+  head(1)
+stats = read.csv(file_path)
+stats$retrievedAt = as.POSIXct(stats$retrievedAt, "utc")
 
-stats = data.table::fread("data/channels-data.csv") |> 
-  tail(nrow(channels_list)) |> 
-  transform(retrievedAt = as.POSIXct(retrievedAt, "utc"))
-
-ltime = (stats$retrievedAt)[1]
-knitr::kable(stats[, -match("retrievedAt", names(stats)), with=FALSE], caption = sprintf("Latest stats as of %s", ltime))
+latest_time = stats$retrievedAt[1]
+stats[stats$retrievedAt == latest_time, -match("retrievedAt", names(stats))] |>
+knitr::kable(caption = sprintf("Latest stats as of %s", latest_time))
 ```
 
 ```{r}
 #| eval: false
-knitr::include_graphics(sprintf("figs/channels-plot_%s.png", substr(ltime, 1, 19)))
+knitr::include_graphics(sprintf("figs/channels-plot_%s.png", substr(latest_time, 1, 19)))
 ```

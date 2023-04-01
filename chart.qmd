@@ -3,12 +3,12 @@ title: Ethiopian YouTube Channels Statistics
 author: Eyayaw
 date: today
 date-format: long
-format: 
+format:
   html:
-    theme: 
+    theme:
      light: flatly
      dark : darkly
-execute: 
+execute:
   warning: false
   message: false
 code-fold: true
@@ -26,31 +26,35 @@ library(data.table)
 library(ggplot2)
 library(patchwork)
 library(ggtext)
+source("make-plots.R")
 ```
 
 ```{r}
 #| label: import data
-
-channels_data = fread("data/channels-data_01-2023.csv")
 channels_info = fread("data/channels-info.csv")
-
-channels_data = merge(channels_data, channels_info, "title")[order(retrievedAt), ]
+flist_channels_data = dir("data",
+"^channels-data_\\d{2}-\\d{4}[.]csv$", full.names=TRUE
+)
+channels_data = lapply(flist_channels_data, fread) |> rbindlist(use.names=TRUE)
+renamer = \(x) sub("(snippet|statistics|contentDetails|topicDetails)[.]", "", x)
+setnames(channels_data, renamer)
+setnames(channels_info, renamer)
+channels_data = merge(channels_data, channels_info,by = "title")[order(retrievedAt), ]
 channels_data[, retrievedAt := as.POSIXct(retrievedAt, "utc")]
 
 num_vars = c("viewCount", "subscriberCount", "videoCount")
 channels_data[,  (num_vars) := lapply(.SD, as.integer), .SDcols = (num_vars)]
-
 channels_data[, viewCountPerVideo := floor(viewCount / videoCount)
                 ][, age := round(as.numeric(retrievedAt - publishedAt)/365.25, 2)
-                  ][, viewCountPerYear := viewCount/age
+                  ][, viewCountPerYear := floor(viewCount/age)
                     ][, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)]
 
 # shorten titles
 channels_data[, title := fcase(
   title == "Ethio 360 Media", "Ethio 360",
   title %ilike% "Ethio 251 Media", "Ethio 251",
-  title == "Feta Daily News", "Feta Daily", 
-  title %like% "^EMS", "EMS", 
+  title == "Feta Daily News", "Feta Daily",
+  title %like% "^EMS", "EMS",
   title %ilike% "Tigra[iy] Media House", "TMH",
   title %ilike% "menelik television 2", "Menelik TV 2",
   rep(TRUE, length(title)), title)
@@ -105,21 +109,21 @@ for (.var in names(subplots)) {
  ))
 
   # plot
-  subplots[[.var]] = ldata[[.var]] |> 
+  subplots[[.var]] = ldata[[.var]] |>
     transform(
       title = reorder(title, count), hjust = ifelse(count == max(count), 1, 0)
-      ) |> 
+      ) |>
     ggplot(aes(count, title)) +
     geom_col(fill = .aes$fill, alpha = 0.75, width = 0.9) +
     geom_label(
-      aes(label = prettyNum(count, ","), hjust = hjust), 
+      aes(label = prettyNum(count, ","), hjust = hjust),
       size = .8 * fsize/.pt, nudge_x = -0.5, fill = "white", label.size = 0) +
     scale_x_continuous(
       #expand = expansion(c(0, .aes$xupper_lim_expand_mult)),
       labels = .aes$labeller
     ) +
     labs(title = .aes$ptitle, x = NULL, y = NULL) +
-    coord_cartesian(clip = "off") + 
+    coord_cartesian(clip = "off") +
     theme(
       plot.title = element_text(size = fsize, face = "bold", hjust = 0.5),
       axis.text = element_text(size = .9 * fsize),
@@ -142,8 +146,8 @@ panel = wrap_plots(subplots, byrow = TRUE) +
       plot.caption = element_markdown(face = "bold.italic", size = .8 * fsize, lineheight = 1.2),
       plot.margin = margin(1, 1, 1, 1, unit = "mm")
     )
-  ) 
-  
+  )
+
 
 # print(panel)
 
@@ -174,9 +178,9 @@ data_latest |>
     labels = scales::label_number(scale = 10^-6)
   ) +
   labs(
-    x = "<span>#Views (in 10<sup>6</sup>)</span>", #expression("#Views" ~ ("in" ~ 10^6)), 
+    x = "<span>#Views (in 10<sup>6</sup>)</span>", #expression("#Views" ~ ("in" ~ 10^6)),
     y = NULL,
-    title = "Total number of views, for a few selected Ethiopian YouTube Channels", 
+    title = "Total number of views, for a few selected Ethiopian YouTube Channels",
     subtitle = subtitle, caption = caption_text
   ) +
   coord_cartesian(clip = "off") +
@@ -204,9 +208,9 @@ ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
 scale_exp = -3
 axis_label = "subscriber"
 data_latest |>
-  transform(title = reorder(title, subscriberCount)) |> 
+  transform(title = reorder(title, subscriberCount)) |>
   ggplot(aes(subscriberCount, title)) +
-  geom_col(fill = "#55bdb4", alpha = .5, width = .8) + 
+  geom_col(fill = "#55bdb4", alpha = .5, width = .8) +
   geom_text(aes(label = scales::label_comma()(subscriberCount)), hjust = -0.05) +
   scale_x_continuous(
     labels = scales::label_number(scale = 10^scale_exp, suffix="k"),
@@ -214,7 +218,7 @@ data_latest |>
     ) +
   labs(
     x = sprintf(
-      "<span>#%ss (in 10<sup>%s</sup>)</span>", 
+      "<span>#%ss (in 10<sup>%s</sup>)</span>",
       tools::toTitleCase(axis_label), -scale_exp
       ),
     y = NULL,
@@ -223,7 +227,7 @@ data_latest |>
       axis_label, retrieved_at
       ),
     caption = sprintf(
-"%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>", 
+"%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>",
 axis_label, caption_text)
   ) +
   theme(
@@ -245,12 +249,9 @@ ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
 ```
 
 
-```{r}
-
-```
 
 ```{r}
-bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
+# bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
 ```
 
 
@@ -277,7 +278,7 @@ weekly_ts_plot <-
   subset(retrievedAt >= "2023-01-01") |>
   DT(order(retrievedAt, title),
     .(retrievedAt = as.Date(retrievedAt), daily_views = viewCount - shift(viewCount)), title
-    ) |> 
+    ) |>
   weekly_ts_plot(retrievedAt, daily_views) +
   ylab(expression(Delta ~ "Total Views"))
 ```
