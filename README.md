@@ -39,33 +39,33 @@ Here is the list of the YouTube channels:
 
 ## Latest stats
 
-| snippet.title                  | statistics.viewCount | statistics.subscriberCount | statistics.videoCount |
-|:-------------------------------|---------------------:|---------------------------:|----------------------:|
-| Abebe Belew                    |             30303247 |                     152000 |                  1062 |
-| Adebabay Media                 |             13036893 |                      99400 |                   914 |
-| Alpha Media አልፋ ሚዲያ            |              5411148 |                      40400 |                   981 |
-| Anchor Ethiopia                |              6648079 |                      80400 |                   236 |
-| Andafta                        |            269542794 |                     889000 |                  5974 |
-| Arat Kilo Media አራት ኪሎ ሚዲያ     |               669293 |                      16100 |                    89 |
-| Ashara Media - አሻራ ሚዲያ         |              2971184 |                      35100 |                   771 |
-| EMS (Ethiopian Media Services) |             44514734 |                     222000 |                  1046 |
-| ESATtv Ethiopia                |            197405901 |                     641000 |                  8811 |
-| ETHIO 251 MEDIA                |             13187078 |                     109000 |                   912 |
-| Ethio 360 Media                |            230124604 |                     583000 |                  4006 |
-| Ethio News - ኢትዮ ኒውስ           |             29028481 |                     164000 |                  1430 |
-| EthioTube                      |             40330479 |                     224000 |                  1750 |
-| Feta Daily News                |            149028357 |                     583000 |                   991 |
-| GEBEYANU                       |             10266427 |                     107000 |                   638 |
-| MENELIK TELEVISION 3           |               246145 |                       2910 |                   129 |
-| Mager Media - ማገር              |              1213374 |                      22900 |                   322 |
-| Mengizem Media ምንጊዜም ሚዲያ       |              3660557 |                      31200 |                  1296 |
-| OMN                            |            110513467 |                     513000 |                  9670 |
-| Reyot                          |             43204588 |                     189000 |                  2069 |
-| Roha                           |             11563335 |                      95200 |                   975 |
-| Terara Network                 |              3389884 |                      45100 |                   276 |
-| Tigrai Media House             |            155145214 |                     351000 |                  5473 |
-| Zara Media Network - ዛራ        |             21515125 |                     129000 |                   418 |
-| ኢትዮ ሰላም Ethio Selam            |              3032904 |                      37700 |                   120 |
-| ዓባይ ዜና - Abbay News            |             17843758 |                     335000 |                  1182 |
+| id                       | snippet.title                  | statistics.viewCount | statistics.subscriberCount | statistics.videoCount |
+|:-------------------------|:-------------------------------|---------------------:|---------------------------:|----------------------:|
+| UCxIn6j4tH1dVnqLd1WFvFNA | Abebe Belew                    |             30303247 |                     152000 |                  1062 |
+| UC-kDmfnktrzc_SGpS9ulrXw | Adebabay Media                 |             13036893 |                      99400 |                   914 |
+| UCUyDe7EvbwwDRjyjUFU5Zhw | Alpha Media አልፋ ሚዲያ            |              5411148 |                      40400 |                   981 |
+| UCgIxJwBNuGzDKrBaZhATDug | Anchor Ethiopia                |              6648079 |                      80400 |                   236 |
+| UCwMHDoJO6cHO6LN1BItFsPQ | Andafta                        |            269542794 |                     889000 |                  5974 |
+| UCK71ZGx5VYTWw2XQ0F_O0nQ | Arat Kilo Media አራት ኪሎ ሚዲያ     |               669293 |                      16100 |                    89 |
+| UCPmgFzP2ZPmdGjHxXjigJaw | Ashara Media - አሻራ ሚዲያ         |              2971184 |                      35100 |                   771 |
+| UCCJbY4YdJIUk7Lygrkg5IRA | EMS (Ethiopian Media Services) |             44514734 |                     222000 |                  1046 |
+| UCSYM-vgRrMYsZbG-Z7Kz0Pw | ESATtv Ethiopia                |            197405901 |                     641000 |                  8811 |
+| UCUOJQ0kAEqms79eY37hH-Jg | ETHIO 251 MEDIA                |             13187078 |                     109000 |                   912 |
+| UCvr6jA3WYOhXFUD2LKpqhQw | Ethio 360 Media                |            230124604 |                     583000 |                  4006 |
+| UCelbYFUaQW3eb9sg3004ZGw | Ethio News - ኢትዮ ኒውስ           |             29028481 |                     164000 |                  1430 |
+| UCCk2vUhB0SyQhA6JXyjXHEg | EthioTube                      |             40330479 |                     224000 |                  1750 |
+| UCgBnBckSLo6-uAiejtnEycQ | Feta Daily News                |            149028357 |                     583000 |                   991 |
+| UCb9fEB6StrknyRiSSzQ7H0A | GEBEYANU                       |             10266427 |                     107000 |                   638 |
+| UC-jwtt0RVJPNidr2Ja1_7yQ | MENELIK TELEVISION 3           |               246145 |                       2910 |                   129 |
+| UCilWrw2C8_VkFZ2tE5eKpdQ | Mager Media - ማገር              |              1213374 |                      22900 |                   322 |
+| UCZvMKrP8XmP9GAHMloucOaA | Mengizem Media ምንጊዜም ሚዲያ       |              3660557 |                      31200 |                  1296 |
+| UCmAnzjcjIgtWuE6AnBCViTg | OMN                            |            110513467 |                     513000 |                  9670 |
+| UCPVr1rrKl8pXVFi-rrqzS1g | Reyot                          |             43204588 |                     189000 |                  2069 |
+| UCDXU7RuIQc0xRKJyP0ZTZaQ | Roha                           |             11563335 |                      95200 |                   975 |
+| UC_f89AbX5NPU77YaoaSKRSg | Terara Network                 |              3389884 |                      45100 |                   276 |
+| UCBvvcSYeDriczyImdI1qZWw | Tigrai Media House             |            155145214 |                     351000 |                  5473 |
+| UCJ61rOk0c0b0COn0qOOo1aQ | Zara Media Network - ዛራ        |             21515125 |                     129000 |                   418 |
+| UCoVL5YOr2KdnYNspQf3s5uw | ኢትዮ ሰላም Ethio Selam            |              3032904 |                      37700 |                   120 |
+| UC6bam4pQbuUgXnmyEFlSpNA | ዓባይ ዜና - Abbay News            |             17843758 |                     335000 |                  1182 |
 
 Latest stats as of 2023-04-01 23:04:33
