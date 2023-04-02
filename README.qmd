@@ -34,7 +34,7 @@ stats = read.csv(file_path)
 stats$retrievedAt = as.POSIXct(stats$retrievedAt, "utc")
 
 latest_time = stats$retrievedAt[1]
-stats[stats$retrievedAt == latest_time, -match("retrievedAt", names(stats))] |>
+stats[stats$retrievedAt == latest_time, -grep("retrievedAt", names(stats), ignore.case = TRUE)] |>
 knitr::kable(caption = sprintf("Latest stats as of %s", latest_time))
 ```
 

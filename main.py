@@ -118,7 +118,7 @@ def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[di
             response_items = response["items"]
             # append the date at which the data was retrieved to each item
             for item in response_items:
-                item.update({"retrievedAt": {"retrievedAt": retrieved_at}})
+                item.update({"retrievedAt": retrieved_at})
             response_items = sorted(response_items, key=lambda x: x["snippet"]["title"])
     except ChannelError:
         # response_items = []
