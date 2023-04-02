@@ -21,6 +21,10 @@ jobs:
 
     - name: Setup renv
       uses: r-lib/actions/setup-renv@v2
+      
+    - name: Install pkgs
+      run: |
+        R -e 'install.packages("knitr")'
 
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
