@@ -104,8 +104,8 @@ def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[di
     if isinstance(channel_ids, list) and len(channel_ids) > 1:
         channel_ids = ", ".join(channel_ids)
 
-    part = ["snippet", "statistics"]
-    fields = "items(%s)" % (", ".join(["snippet(title)","statistics(viewCount, subscriberCount, videoCount)"]))
+    part = ["id", "snippet", "statistics"]
+    fields = "items(%s)" % (", ".join(["id", "snippet(title)","statistics(viewCount, subscriberCount, videoCount)"]))
 
     # send the request to the youtube data api
     youtube = build("youtube", "v3", developerKey=api_key)
