@@ -44,7 +44,7 @@ jobs:
        
     - name: Install pkgs
       run: |
-        R -e 'install.packages("knitr")'
+        R -e 'install.packages(c("knitr", "jsonlite", "rmarkdown"))'
 
     - name: Render README.qmd
       run: |
