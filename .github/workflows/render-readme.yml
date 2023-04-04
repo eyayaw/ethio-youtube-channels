@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'data/channels-data_*-*.csv'
-  workflow_dispatch:
+#workflow_dispatch:
 
 env:
   RENV_PATHS_ROOT: ~/.local/share/renv
