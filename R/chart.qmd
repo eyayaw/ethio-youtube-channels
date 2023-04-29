@@ -31,25 +31,12 @@ source("make-plots.R")
 
 ```{r}
 #| label: import data
-channels_info = fread("data/channels-info.csv")
-flist_channels_data = dir("data",
-"^channels-data_\\d{2}-\\d{4}[.]csv$", full.names=TRUE
-)
-channels_data = lapply(flist_channels_data, fread) |> rbindlist(use.names=TRUE)
-renamer = \(x) sub("(snippet|statistics|contentDetails|topicDetails)[.]", "", x)
-setnames(channels_data, renamer)
-setnames(channels_info, renamer)
-channels_data = merge(channels_data, channels_info,by = "title")[order(retrievedAt), ]
-channels_data[, retrievedAt := as.POSIXct(retrievedAt, "utc")]
-
-num_vars = c("viewCount", "subscriberCount", "videoCount")
-channels_data[,  (num_vars) := lapply(.SD, as.integer), .SDcols = (num_vars)]
-channels_data[, viewCountPerVideo := floor(viewCount / videoCount)
-                ][, age := round(as.numeric(retrievedAt - publishedAt)/365.25, 2)
-                  ][, viewCountPerYear := floor(viewCount/age)
-                    ][, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)]
+channels_info = fread("./data/channels-info.csv")
+channels_data = fread("./channels-data_merged.csv")
+setcolorder(channels_data, c("id", "title"))
 
 # shorten titles
+channels_data[, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)]
 channels_data[, title := fcase(
   title == "Ethio 360 Media", "Ethio 360",
   title %ilike% "Ethio 251 Media", "Ethio 251",
@@ -60,19 +47,18 @@ channels_data[, title := fcase(
   rep(TRUE, length(title)), title)
 ][, title := trimws(title)]
 
-
 # pick the latest
 data_latest = channels_data[retrievedAt == max(retrievedAt), ]
 ```
 
 ```{r}
-#| label:  plot options
+#| label: plot options
 fsize = 12
 theme_set(theme_light())
 fig_width = 12
 fig_height = 0.618 * fig_width
 retrieved_at = data_latest$retrievedAt[1]
-subtitle = sprintf("Data access date: <span style='color:red;'>%s</span>", retrieved_at)
+subtitle = sprintf("Data retrieval time: <span style='color:red;'>%s</span>", retrieved_at)
 caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span><br>Data: accessed via <span style = 'color:red;'>YouTube Data API v3</span>"
 ```
 
@@ -80,6 +66,7 @@ caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span>
 #| label: chart
 #| fig-width: !expr fig_width
 #| fig-height: !expr fig_height
+#| include: false
 
 lookup = list(
   var = c("viewCount", "subscriberCount", "videoCount", "viewCountPerVideo"),
@@ -148,9 +135,10 @@ panel = wrap_plots(subplots, byrow = TRUE) +
     )
   )
 
+print(panel)
+```
 
-# print(panel)
-
+```{r}
 # save figure ----
 png_file = sprintf("figs/channels-plot_%s.png", retrieved_at)
 ggsave(png_file, panel, ragg::agg_png,
@@ -196,12 +184,16 @@ data_latest |>
     plot.caption = element_markdown(face = "italic", lineheight = 1.2),
     plot.background = element_rect(fill = "gray97", color = NA),
     plot.margin = margin(2, 2, 2, 2, unit = "mm")
-  )
+  ) -> p_latest
 
+p_latest
+```
+
+```{r}
 # save figure ----
 png_file = sprintf("figs/channels-plot_views_%s.png", retrieved_at)
-ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
-#knitr::include_graphics(png_file)
+ggsave(png_file, p_latest, ragg::agg_png, width = 8, height = 6, dpi = 300)
+# knitr::include_graphics(png_file)
 ```
 
 ```{r}

@@ -109,13 +109,13 @@ Snapshot of stats as of 2023-04-01 23:04:33
 
 2.  Set the API key as an environment variable named
     `YOUTUBE_DATA_API_V3_KEY` :
-    `bash     export YOUTUBE_DATA_API_V3_KEY=your_api_key`
+    `export YOUTUBE_DATA_API_V3_KEY=your_api_key`
 
 3.  Update the  channels-list.csv  file with the list of YouTube channel
     IDs that you want to collect daily statistics about/from. Add one
     channel ID per row.
 
-4.  Run the script: `bash     python main.py`
+4.  Run the script: `python main.py`
 
 5.  The script will generate a CSV file named
      `channels-data_MM-YYYY.csv`  (where MM is the month and YYYY is the

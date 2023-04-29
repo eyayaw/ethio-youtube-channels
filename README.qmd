@@ -10,26 +10,37 @@ execute:
 
 # Ethiopian Political YouTube Channels Daily Statistics
 
-This repository contains a Python script that collects daily statistics, such as view count, subscriber count, and video count, from a selected list of Ethiopian YouTube channels that have political proclivities or heavily discuss Ethiopian politics.
+This repository contains a Python script that collects daily statistics,
+such as view count, subscriber count, and video count, from a selected
+list of Ethiopian YouTube channels that have political proclivities or
+heavily discuss Ethiopian politics.
 
-The script `main.py` has been running since `January 01, 2023`, see [.`/data/channels-data_01-2023.csv`](./data/channels-data_01-2023.csv).
-The repo also includes R scripts for generating charts based on the collected data.
-You can use this repo to collect daily statistics of other YouTube channels, see the [Usage](#usage) section below.
+The script `main.py` has been running since `January 01, 2023`, see
+[.`/data/channels-data_01-2023.csv`](./data/channels-data_01-2023.csv).
+The repo also includes R scripts for generating charts based on the
+collected data. You can use this repo to collect daily statistics of
+other YouTube channels, see the [Usage](#usage) section below.
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Visualizing Data](#visualizing-data)
-- [Contributing](#contributing)
+-   [Overview](#overview)
+-   [Requirements](#requirements)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Visualizing Data](#visualizing-data)
+-   [Contributing](#contributing)
 
-## Overview
+## Overview {#overview}
 
-The purpose of this project is to gather daily insights and analyze the impact of Ethiopian political YouTube channels on their audience. By collecting and processing data such as view count, subscriber count, and video count, we can better understand the reach and influence of these channels in the Ethiopian political landscape, and identify which channels are more popular.
+The purpose of this project is to gather daily insights and analyze the
+impact of Ethiopian political YouTube channels on their audience. By
+collecting and processing data such as view count, subscriber count, and
+video count, we can better understand the reach and influence of these
+channels in the Ethiopian political landscape, and identify which
+channels are more popular.
 
 <details>
+
 <summary>View a snapshot of stats</summary>
 
 ```{r}
@@ -45,69 +56,95 @@ latest_time = stats$retrievedAt[1]
 stats[stats$retrievedAt == latest_time, -grep("retrievedAt|snippet\\.title", names(stats), ignore.case = TRUE)] |>
 knitr::kable(caption = sprintf("Snapshot of stats as of %s", latest_time))
 ```
+
 </details>
 
-## Requirements
+## Requirements {#requirements}
 
--  Python 3.6 or higher
--  [google-api-python-client](https://github.com/googleapis/google-api-python-client) package
--  R dependencies: `data.table` and `ggplot2`
--  [Quarto](https://quarto.org) (for rendering chart.qmd)
+-   Python 3.6 or higher
+-   [google-api-python-client](https://github.com/googleapis/google-api-python-client)
+    package
+-   R dependencies: `data.table` and `ggplot2`
+-   [Quarto](https://quarto.org) (for rendering chart.qmd)
 
-## Installation
+## Installation {#installation}
 
-1. Clone this repository:
+1.  Clone this repository:
 
-    ```bash
+    ``` bash
     git clone https://github.com/eyayaw/ethio-youtube-channels.git
     ```
 
-2.	Change the directory to the cloned repository:
+2.  Change the directory to the cloned repository:
 
-    ```bash
+    ``` bash
     cd ethio-youtube-channels
     ```
-3.	Install the required Python package:
 
-    ```bash
+3.  Install the required Python package:
+
+    ``` bash
     pip install -r requirements.txt
     ```
 
-# Usage
+# Usage {#usage}
 
-1. To use the script, you'll need to obtain a Google API key. Follow the instructions in the [Google API Console documentation](https://developers.google.com/youtube/registering_an_application) to create a project and obtain an API key. Please read the [YouTube Data API getting started](https://developers.google.com/youtube/v3/getting-started).
+1.  To use the script, you'll need to obtain a Google API key. Follow
+    the instructions in the [Google API Console
+    documentation](https://developers.google.com/youtube/registering_an_application)
+    to create a project and obtain an API key. Please read the [YouTube
+    Data API getting
+    started](https://developers.google.com/youtube/v3/getting-started).
 
-2.	Set the API key as an environment variable named `YOUTUBE_DATA_API_V3_KEY` :
-    ```bash
-    export YOUTUBE_DATA_API_V3_KEY=your_api_key
-    ```
+2.  Set the API key as an environment variable named
+    `YOUTUBE_DATA_API_V3_KEY` :
+    `export YOUTUBE_DATA_API_V3_KEY=your_api_key`
 
-3.	Update the  channels-list.csv  file with the list of YouTube channel IDs that you want to collect daily statistics about/from. Add one channel ID per row.
-2.	Run the script:
-    ```bash
-    python main.py
-    ```
-5. The script will generate a CSV file named  `channels-data_MM-YYYY.csv`  (where MM is the month and YYYY is the year, generated automatically as the script runs) in the  `data`  folder containing the daily statistics for each channel in the  `channels-list.csv`  file. Additionally, "static" information of the channels given in `channels-list.csv` will be written to `data/channels-info.csv`, and will be updated when new channels are added to the list.
+3.  Update the  channels-list.csv  file with the list of YouTube channel
+    IDs that you want to collect daily statistics about/from. Add one
+    channel ID per row.
 
-# Visualizing Data
+4.  Run the script: `python main.py`
 
-1.	Install the required R packages by running the following command in the R console:
-    `install.packages(c("ggplot2", "data.table"))`
-2.	Open the  `make-plots.R`  script and modify the input file name to match the latest CSV file in the  data  folder.
+5.  The script will generate a CSV file named
+     `channels-data_MM-YYYY.csv`  (where MM is the month and YYYY is the
+    year, generated automatically as the script runs) in the  `data` 
+    folder containing the daily statistics for each channel in the
+     `channels-list.csv`  file. Additionally, "static" information of
+    the channels given in `channels-list.csv` will be written to
+    `data/channels-info.csv`, and will be updated when new channels are
+    added to the list.
 
-3.	Run the  `make-plots.R`  script to generate an interactive chart and save it as  chart.html.
+# Visualizing Data {#visualizing-data}
 
-4.	Install Quarto and use it to render the  chart.qmd  file.
+1.  Install the required R packages by running the following command in
+    the R console: `install.packages(c("ggplot2", "data.table"))`
 
-# Contributing
+2.  Open the  `make-plots.R`  script and modify the input file name to
+    match the latest CSV file in the  data  folder.
 
-I highly welcome contributions to this project. If you want to add new features, fix bugs, or improve documentation, please submit a pull request or open an issue.
+3.  Run the  `make-plots.R`  script to generate an interactive chart and
+    save it as  chart.html.
 
-----
+4.  Install Quarto and use it to render the  chart.qmd  file.
+
+# Contributing {#contributing}
+
+I highly welcome contributions to this project. If you want to add new
+features, fix bugs, or improve documentation, please submit a pull
+request or open an issue.
+
+------------------------------------------------------------------------
+
 > # Inspired by
-1. [Corey Schafer](https://github.com/CoreyMSchafer)'s [Python YouTube API tutorials](https://www.youtube.com/@coreyms/search?query=python%20youtube%20api%20tutorial), and
-2. [Patrik Loeber](https://github.com/patrickloeber)'s [YouTube Data API tutorials](https://www.python-engineer.com/posts/youtube-data-api-01)
-
+>
+> 1.  [Corey Schafer](https://github.com/CoreyMSchafer)'s [Python
+>     YouTube API
+>     tutorials](https://www.youtube.com/@coreyms/search?query=python%20youtube%20api%20tutorial),
+>     and
+> 2.  [Patrik Loeber](https://github.com/patrickloeber)'s [YouTube Data
+>     API
+>     tutorials](https://www.python-engineer.com/posts/youtube-data-api-01)
 
 ```{r}
 #| eval: false
