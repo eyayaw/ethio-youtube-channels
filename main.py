@@ -3,45 +3,16 @@
 import os
 import csv
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from datetime import datetime, timezone
+from utils import flatten_dict, batched
 
-# helper ----
-# %%
-def flatten_dict(d: dict, parent_key: str = '', sep: str = '.') -> dict:
-    """
-    Flattens a nested dictionary by concatenating keys with a separator.
-
-    Args:
-        d (dict): The dictionary to flatten.
-        parent_key (str): The parent key to use for concatenation. Defaults to an empty string.
-        sep (str): The separator to use for concatenation. Defaults to '.'.
-
-    Returns:
-        dict: The flattened dictionary.
-    """
-    items = []
-    for k, v in d.items():
-        # concatenate the parent key and current key with the separator
-        new_key = f"{parent_key}{sep}{k}" if parent_key else k
-        if isinstance(v, dict):
-            # recursively flatten nested dictionaries and extend the result to the items list
-            nested_items = flatten_dict(v, new_key, sep=sep).items()
-            items.extend(nested_items)
-        else:
-            # add the flattened key-value pair to the items list
-            items.append((new_key, v))
-    # return the flattened dictionary as a dictionary
-    return dict(items)
-
-# custom exception to catch empty response for disabled/inactive/terminated channel
-class ChannelError(ValueError):
-    pass
 
 # retrievers ----
 # %%
 def get_channel_info_static(api_key: str, channel_ids: list[str], **kwargs) -> list[dict]:
     """
-    Retreive information about the channel from the YouTube Data API.
+    Retrieve information about the channel from the YouTube Data API.
     Such information can be the description, and topic details of the channel,
     the country where it is located at, etc.
     And, mostly these details are already set, or may not not change frequently. So calling this function for a channel once may be sufficient.
@@ -55,42 +26,39 @@ def get_channel_info_static(api_key: str, channel_ids: list[str], **kwargs) -> l
         list: A list of dict of channel data.
     """
 
-    if isinstance(channel_ids, list) and len(channel_ids) > 1:
-        channel_ids = ", ".join(channel_ids)
-
     part = ", ".join(["id", "snippet", "topicDetails", "contentDetails"])
     fields = (
         "id",
         "snippet(title, description, publishedAt, country, thumbnails.high.url)",
         "topicDetails.topicCategories",
         "contentDetails.relatedPlaylists.uploads"
-        )
-    fields = "items(%s)" %(", ".join(fields))
+    )
+    fields = "items(%s)" % (", ".join(fields))
 
-    # send the request to the youtube data api
+    response_items = []
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
-        response = youtube.channels().list(part=part, id=channel_ids, fields=fields, **kwargs).execute()
-        retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z")
-        if "items" not in response:
-            raise ChannelError
-        # print("The response is empty.\nThe channels do not exist, or are disabled or terminated by YouTube.")
-        else:
-            response_items = sorted(response["items"], key=lambda x: x["snippet"]["title"])
-        print("Data accessed at: " + retrieved_at)
-    except ChannelError:
-        # response_items = []
-        raise SystemExit(f"ChannelError: The channel(s) {channel_ids} is inactive/disabled/terminated.")
-    except Exception as e:
-        raise SystemExit(f"err={e}")
+        for batch in batched(channel_ids, 50):
+            batch_ids = ", ".join(batch)
+            try:
+                response = youtube.channels().list(part=part, id=batch_ids, fields=fields, **kwargs).execute()
+                retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z")
+                items = response.get("items", [])
+                if not items:
+                    print(f"No data for batch: {batch_ids}")
+                    continue
+                response_items.extend(items)
+                print("Data accessed at: " + retrieved_at)
+            except HttpError as e:
+                print(f"API error for batch {batch_ids}: {e}")
     finally:
         youtube.close()
 
-    return response_items
+    return sorted(response_items, key=lambda x: x["snippet"]["title"])
 
 
 def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[dict]:
-    """Retreive channel statistics (number of views, subscribers, videos, etc.) from the YouTube Data API.
+    """Retrieve channel statistics (number of views, subscribers, videos, etc.) from the YouTube Data API.
 
     Args:
         api_key (str): YouTube Data API Key
@@ -101,34 +69,30 @@ def get_channel_stats(api_key: str, channel_ids: list[str], **kwargs) -> list[di
         list: A list of dict of channel data.
     """
 
-    if isinstance(channel_ids, list) and len(channel_ids) > 1:
-        channel_ids = ", ".join(channel_ids)
-
     part = ["id", "snippet", "statistics"]
-    fields = "items(%s)" % (", ".join(["id", "snippet(title)","statistics(viewCount, subscriberCount, videoCount)"]))
+    fields = "items(%s)" % (", ".join(["id", "snippet(title)", "statistics(viewCount, subscriberCount, videoCount)"]))
 
-    # send the request to the youtube data api
+    response_items = []
     youtube = build("youtube", "v3", developerKey=api_key)
     try:
-        response = youtube.channels().list(part=part, id=channel_ids, fields=fields, **kwargs).execute()
-        retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z")
-        if "items" not in response:
-            raise ChannelError
-        else:
-            response_items = response["items"]
-            # append the date at which the data was retrieved to each item
-            for item in response_items:
-                item.update({"retrievedAt": retrieved_at})
-            response_items = sorted(response_items, key=lambda x: x["snippet"]["title"])
-    except ChannelError:
-        # response_items = []
-        raise SystemExit(f"ChannelError: The channel(s) {channel_ids} is inactive/disabled/terminated.")
-    except Exception as e:
-        raise SystemExit(f"err={e}")
+        for batch in batched(channel_ids, 50):
+            batch_ids = ", ".join(batch)
+            try:
+                response = youtube.channels().list(part=part, id=batch_ids, fields=fields, **kwargs).execute()
+                retrieved_at = datetime.now(timezone.utc).strftime("%F %T %Z")
+                items = response.get("items", [])
+                if not items:
+                    print(f"No data for batch: {batch_ids}")
+                    continue
+                for item in items:
+                    item.update({"retrievedAt": retrieved_at})
+                response_items.extend(items)
+            except HttpError as e:
+                print(f"API error for batch {batch_ids}: {e}")
     finally:
         youtube.close()
 
-    return response_items
+    return sorted(response_items, key=lambda x: x["snippet"]["title"])
 
 
 # writers ----
@@ -198,7 +162,7 @@ def main():
     out_dir = "data/"  # dir for writing the data to
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
-    # put each month data seprately, otherwise we'll have a huge csv file
+    # put each month data separately, otherwise we'll have a huge csv file
     mon_year = datetime.now(timezone.utc).strftime("%m-%Y")
     out_file = f"{out_dir}/channels-data_{mon_year}.csv"
 
@@ -228,6 +192,7 @@ def main():
             pass
         else:
             write_channel_info(channel_info_path, channel_info)
+
 
 # run main() ----
 # %%
