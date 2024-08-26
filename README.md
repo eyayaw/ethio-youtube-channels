@@ -1,4 +1,5 @@
 
+
 <!-- README.md is generated from README.qmd. Please edit that file -->
 
 # Ethiopian Political YouTube Channels Daily Statistics
@@ -37,36 +38,44 @@ channels are more popular.
 View a snapshot of stats
 </summary>
 
-| id                                                                                     | statistics.viewCount | statistics.subscriberCount | statistics.videoCount |
-|:---------------------------------------------------------------------------------------|---------------------:|---------------------------:|----------------------:|
-| [Abebe Belew](https://youtube.com/channel/UCxIn6j4tH1dVnqLd1WFvFNA)                    |             30303247 |                     152000 |                  1062 |
-| [Adebabay Media](https://youtube.com/channel/UC-kDmfnktrzc_SGpS9ulrXw)                 |             13036893 |                      99400 |                   914 |
-| [Alpha Media አልፋ ሚዲያ](https://youtube.com/channel/UCUyDe7EvbwwDRjyjUFU5Zhw)            |              5411148 |                      40400 |                   981 |
-| [Anchor Ethiopia](https://youtube.com/channel/UCgIxJwBNuGzDKrBaZhATDug)                |              6648079 |                      80400 |                   236 |
-| [Andafta](https://youtube.com/channel/UCwMHDoJO6cHO6LN1BItFsPQ)                        |            269542794 |                     889000 |                  5974 |
-| [Arat Kilo Media አራት ኪሎ ሚዲያ](https://youtube.com/channel/UCK71ZGx5VYTWw2XQ0F_O0nQ)     |               669293 |                      16100 |                    89 |
-| [Ashara Media - አሻራ ሚዲያ](https://youtube.com/channel/UCPmgFzP2ZPmdGjHxXjigJaw)         |              2971184 |                      35100 |                   771 |
-| [EMS (Ethiopian Media Services)](https://youtube.com/channel/UCCJbY4YdJIUk7Lygrkg5IRA) |             44514734 |                     222000 |                  1046 |
-| [ESATtv Ethiopia](https://youtube.com/channel/UCSYM-vgRrMYsZbG-Z7Kz0Pw)                |            197405901 |                     641000 |                  8811 |
-| [ETHIO 251 MEDIA](https://youtube.com/channel/UCUOJQ0kAEqms79eY37hH-Jg)                |             13187078 |                     109000 |                   912 |
-| [Ethio 360 Media](https://youtube.com/channel/UCvr6jA3WYOhXFUD2LKpqhQw)                |            230124604 |                     583000 |                  4006 |
-| [Ethio News - ኢትዮ ኒውስ](https://youtube.com/channel/UCelbYFUaQW3eb9sg3004ZGw)           |             29028481 |                     164000 |                  1430 |
-| [EthioTube](https://youtube.com/channel/UCCk2vUhB0SyQhA6JXyjXHEg)                      |             40330479 |                     224000 |                  1750 |
-| [Feta Daily News](https://youtube.com/channel/UCgBnBckSLo6-uAiejtnEycQ)                |            149028357 |                     583000 |                   991 |
-| [GEBEYANU](https://youtube.com/channel/UCb9fEB6StrknyRiSSzQ7H0A)                       |             10266427 |                     107000 |                   638 |
-| [MENELIK TELEVISION 3](https://youtube.com/channel/UC-jwtt0RVJPNidr2Ja1_7yQ)           |               246145 |                       2910 |                   129 |
-| [Mager Media - ማገር](https://youtube.com/channel/UCilWrw2C8_VkFZ2tE5eKpdQ)              |              1213374 |                      22900 |                   322 |
-| [Mengizem Media ምንጊዜም ሚዲያ](https://youtube.com/channel/UCZvMKrP8XmP9GAHMloucOaA)       |              3660557 |                      31200 |                  1296 |
-| [OMN](https://youtube.com/channel/UCmAnzjcjIgtWuE6AnBCViTg)                            |            110513467 |                     513000 |                  9670 |
-| [Reyot](https://youtube.com/channel/UCPVr1rrKl8pXVFi-rrqzS1g)                          |             43204588 |                     189000 |                  2069 |
-| [Roha](https://youtube.com/channel/UCDXU7RuIQc0xRKJyP0ZTZaQ)                           |             11563335 |                      95200 |                   975 |
-| [Terara Network](https://youtube.com/channel/UC_f89AbX5NPU77YaoaSKRSg)                 |              3389884 |                      45100 |                   276 |
-| [Tigrai Media House](https://youtube.com/channel/UCBvvcSYeDriczyImdI1qZWw)             |            155145214 |                     351000 |                  5473 |
-| [Zara Media Network - ዛራ](https://youtube.com/channel/UCJ61rOk0c0b0COn0qOOo1aQ)        |             21515125 |                     129000 |                   418 |
-| [ኢትዮ ሰላም Ethio Selam](https://youtube.com/channel/UCoVL5YOr2KdnYNspQf3s5uw)            |              3032904 |                      37700 |                   120 |
-| [ዓባይ ዜና - Abbay News](https://youtube.com/channel/UC6bam4pQbuUgXnmyEFlSpNA)            |             17843758 |                     335000 |                  1182 |
+| id | statistics.viewCount | statistics.subscriberCount | statistics.videoCount |
+|:---|---:|---:|---:|
+| [Abc tv](https://youtube.com/channel/UCTA1qWa_OFVl7OZ6DrEwRwg) | 200828 | 11600 | 131 |
+| [Addis Compass Media / ACM / አዲስ ኮምፓስ ሚዲያ](https://youtube.com/channel/UCwUJ_Zli745ZoImP4IljpYg) | 14583797 | 72200 | 1058 |
+| [AddisWalta - AW](https://youtube.com/channel/UC4yEV6VBe0Emu8sMpyij0uQ) | 60630014 | 459000 | 23112 |
+| [Adebabay Media](https://youtube.com/channel/UC-kDmfnktrzc_SGpS9ulrXw) | 14682322 | 107000 | 1035 |
+| [Alpha Media አልፋ ሚዲያ](https://youtube.com/channel/UCUyDe7EvbwwDRjyjUFU5Zhw) | 9614769 | 56000 | 1719 |
+| [Andafta](https://youtube.com/channel/UCwMHDoJO6cHO6LN1BItFsPQ) | 317144179 | 988000 | 7769 |
+| [Arat Kilo Media አራት ኪሎ ሚዲያ](https://youtube.com/channel/UCK71ZGx5VYTWw2XQ0F_O0nQ) | 712570 | 16500 | 90 |
+| [DW Amharic](https://youtube.com/channel/UC3-RNH75BEZslJLEoIAxa2A) | 261164 | 9800 | 256 |
+| [EBC](https://youtube.com/channel/UCOhrz3uRCOHmK6ueUstw7_Q) | 508033529 | 1490000 | 69427 |
+| [EMS (Ethiopian Media Services)](https://youtube.com/channel/UCCJbY4YdJIUk7Lygrkg5IRA) | 94474168 | 370000 | 2592 |
+| [ESAN TV](https://youtube.com/channel/UC5_7TzCp7YndNhVLo9top9A) | 3087032 | 42600 | 106 |
+| [ESATtv Ethiopia](https://youtube.com/channel/UCSYM-vgRrMYsZbG-Z7Kz0Pw) | 213553058 | 699000 | 11359 |
+| [EVN for Ethiopia](https://youtube.com/channel/UCuJQBlbbVB-3pZKLDxDI4HA) | 3051920 | 46500 | 242 |
+| [Ethio Forum ኢትዮ ፎረም](https://youtube.com/channel/UCXUFyN9Ys5tiIHgJFQKRJvA) | 328906250 | 830000 | 2103 |
+| [Ethio News - ኢትዮ ኒውስ](https://youtube.com/channel/UCelbYFUaQW3eb9sg3004ZGw) | 39301147 | 194000 | 1836 |
+| [Ethio News_ኢትዮ ኒውስ ቻናል 2](https://youtube.com/channel/UC_m5g0TeOmYTPb535BLWd9Q) | 7504644 | 70800 | 251 |
+| [Ethio Selam](https://youtube.com/channel/UCoVL5YOr2KdnYNspQf3s5uw) | 2134367 | 67000 | 88 |
+| [EthioTube](https://youtube.com/channel/UCCk2vUhB0SyQhA6JXyjXHEg) | 44496132 | 266000 | 1925 |
+| [Fana Television](https://youtube.com/channel/UCZtXd8pSeqURf5MT2fqE51g) | 435002971 | 1480000 | 45473 |
+| [Feta Daily News](https://youtube.com/channel/UCgBnBckSLo6-uAiejtnEycQ) | 249292345 | 827000 | 1872 |
+| [GEBEYANU](https://youtube.com/channel/UCb9fEB6StrknyRiSSzQ7H0A) | 14007827 | 139000 | 836 |
+| [Horizon Free Media ሆራይዝን ነፃ ሚዲያ](https://youtube.com/channel/UCNgwbT7BCcppLG3zDm9f5UA) | 3583645 | 49800 | 195 |
+| [Mager Media - ማገር](https://youtube.com/channel/UCilWrw2C8_VkFZ2tE5eKpdQ) | 2316530 | 34300 | 450 |
+| [Mengizem Media ምንጊዜም ሚዲያ](https://youtube.com/channel/UCZvMKrP8XmP9GAHMloucOaA) | 8171838 | 69900 | 2501 |
+| [OMN](https://youtube.com/channel/UCmAnzjcjIgtWuE6AnBCViTg) | 143027902 | 683000 | 12456 |
+| [Reyot](https://youtube.com/channel/UCPVr1rrKl8pXVFi-rrqzS1g) | 68142059 | 263000 | 2610 |
+| [Roha](https://youtube.com/channel/UCDXU7RuIQc0xRKJyP0ZTZaQ) | 47947539 | 235000 | 2078 |
+| [Terara Network](https://youtube.com/channel/UC_f89AbX5NPU77YaoaSKRSg) | 3727641 | 52800 | 285 |
+| [Tigrai Media House](https://youtube.com/channel/UCBvvcSYeDriczyImdI1qZWw) | 161231551 | 373000 | 6438 |
+| [VOA Amharic](https://youtube.com/channel/UC5OePohJjdkd0Uwm3r1cThA) | 13280504 | 151000 | 7263 |
+| [Wazema Radio](https://youtube.com/channel/UCQwdCM4dBMgxPh0UZa8PIow) | 2692496 | 50300 | 1545 |
+| [Zara Media Network - ዛራ](https://youtube.com/channel/UCJ61rOk0c0b0COn0qOOo1aQ) | 1291408 | 143000 | 0 |
+| [ebstv worldwide](https://youtube.com/channel/UCVcc_sbg3AcXLV9vVufJrGg) | 1360838470 | 2600000 | 26042 |
+| [ዓባይ ዜና - Abbay News](https://youtube.com/channel/UC6bam4pQbuUgXnmyEFlSpNA) | 33039618 | 440000 | 1979 |
 
-Snapshot of stats as of 2023-04-01 23:04:33
+Snapshot of stats as of 2024-08-01 23:05:10
 
 </details>
 
@@ -137,7 +146,7 @@ Snapshot of stats as of 2023-04-01 23:04:33
 3.  Run the  `make-plots.R`  script to generate an interactive chart and
     save it as  chart.html.
 
-4.  Install Quarto and use it to render the  chart.qmd  file.
+4.  Install Quarto and use it to render the  `analysis.qmd`  file.
 
 # Contributing
 

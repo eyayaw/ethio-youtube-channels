@@ -1,0 +1,285 @@
+---
+title: Ethiopian YouTube Channels Statistics
+author: Eyayaw
+date: today
+date-format: long
+format:
+  html:
+    theme:
+     light: flatly
+     dark : darkly
+execute:
+  warning: false
+  message: false
+code-fold: true
+code-line-numbers: true
+code-link: true
+code-tools: true
+highlight-style: github
+link-external-icon: true
+link-external-newwindow: true
+---
+
+```{r}
+#| label: set up
+library(data.table)
+library(ggplot2)
+library(patchwork)
+library(ggtext)
+source("R/make_plots.R")
+```
+
+```{r}
+#| label: import data
+channels_info = fread("./data/channels-info.csv")
+channels_data = fread("./data/processed/channels-data_merged.csv")
+setcolorder(channels_data, c("id", "title"))
+
+# shorten titles
+channels_data[, title := gsub("[ -]*\\p{Ethiopic}+[ -]*", "", title, perl = TRUE)]
+channels_data[, title := fcase(
+  title == "Ethio 360 Media", "Ethio 360",
+  title %ilike% "Ethio 251 Media", "Ethio 251",
+  title == "Feta Daily News", "Feta Daily",
+  title %like% "^EMS", "EMS",
+  title %ilike% "Tigra[iy] Media House", "TMH",
+  title %ilike% "menelik television 2", "Menelik TV 2",
+  rep(TRUE, length(title)), title)
+][, title := trimws(title)]
+
+# pick the latest
+data_latest = channels_data[retrievedAt == max(retrievedAt), ]
+```
+
+```{r}
+#| label: plot options
+fsize = 12
+theme_set(theme_light())
+fig_width = 12
+fig_height = 0.618 * fig_width
+retrieved_at = data_latest$retrievedAt[1]
+subtitle = sprintf("Data retrieval time: <span style='color:red;'>%s</span>", retrieved_at)
+caption_text = "Author: <span style = 'color:#0090e8;'>twitter.com/eyayaw</span><br>Data: accessed via <span style = 'color:red;'>YouTube Data API v3</span>"
+```
+
+```{r}
+#| label: chart
+#| fig-width: !expr fig_width
+#| fig-height: !expr fig_height
+#| include: false
+
+lookup = list(
+  var = c("viewCount", "subscriberCount", "videoCount", "viewCountPerVideo"),
+  label = c("#Views", "#Subscribers", "#Videos", "#Views per video"),
+  color = c("#8298f8", "#52b439", "#f68060", "#55bdb4"),
+  xupper_lim_expand_mult = c(0.01, .01, .01, .01),
+  labeller = c(
+    scales::label_number(scale = 10^-6),
+    replicate(3, scales::label_comma(scale = 1e-3, suffix = "k"))
+  )
+)
+
+channels_data_long = data_latest |>
+  melt(measure.vars = lookup$var, value.name = "count")
+
+ldata = channels_data_long |> split(by = "variable")
+subplots = vector("list", length(ldata))
+names(subplots) = names(ldata)
+
+for (.var in names(subplots)) {
+  # plot aesthetics
+  .aes = with(lookup, list(
+   fill = color[match(.var, var)],
+   ptitle = label[match(.var, var)],
+   xupper_lim_expand_mult = xupper_lim_expand_mult[match(.var, var)],
+   labeller = labeller[[match(.var, var)]]
+ ))
+
+  # plot
+  subplots[[.var]] = ldata[[.var]] |>
+    transform(
+      title = reorder(title, count), hjust = ifelse(count == max(count), 1, 0)
+      ) |>
+    ggplot(aes(count, title)) +
+    geom_col(fill = .aes$fill, alpha = 0.75, width = 0.9) +
+    geom_label(
+      aes(label = prettyNum(count, ","), hjust = hjust),
+      size = .8 * fsize/.pt, nudge_x = -0.5, fill = "white", label.size = 0) +
+    scale_x_continuous(
+      #expand = expansion(c(0, .aes$xupper_lim_expand_mult)),
+      labels = .aes$labeller
+    ) +
+    labs(title = .aes$ptitle, x = NULL, y = NULL) +
+    coord_cartesian(clip = "off") +
+    theme(
+      plot.title = element_text(size = fsize, face = "bold", hjust = 0.5),
+      axis.text = element_text(size = .9 * fsize),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "gray99", color = NA)
+    )
+}
+
+
+# combine plots ----
+panel = wrap_plots(subplots, byrow = TRUE) +
+  plot_annotation(
+    title = "Stats about Selected Ethiopian YouTube Channels",
+    subtitle = subtitle,
+    caption = caption_text,
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 1.5 * fsize),
+      plot.subtitle = element_markdown(face = "bold.italic", size = 1.3 * fsize),
+      plot.caption = element_markdown(face = "bold.italic", size = .8 * fsize, lineheight = 1.2),
+      plot.margin = margin(1, 1, 1, 1, unit = "mm")
+    )
+  )
+
+print(panel)
+```
+
+```{r}
+# save figure ----
+png_file = sprintf("figs/channels-plot_%s.png", retrieved_at)
+ggsave(png_file, panel, ragg::agg_png,
+  width = fig_width, height = fig_height, dpi = 300
+)
+knitr::include_graphics(png_file)
+```
+
+
+```{r}
+#| label: channel-views
+data_latest |>
+  transform(
+    title = reorder(title, viewCount),
+    hjust = ifelse(viewCount == max(viewCount), 1, 0)
+  ) |>
+  ggplot(aes(x = viewCount, y = title)) +
+  geom_col(fill = "#52b439", alpha = .6) +
+  geom_label(
+    aes(label = prettyNum(viewCount, big.mark = ","), hjust = hjust),
+    size = 10 / .pt, nudge_x = .5, fill = "white", label.size = 0
+  ) +
+  scale_x_continuous(
+    expand = expansion(c(.01, 0.01)),
+    labels = scales::label_number(scale = 10^-6)
+  ) +
+  labs(
+    x = "<span>#Views (in 10<sup>6</sup>)</span>", #expression("#Views" ~ ("in" ~ 10^6)),
+    y = NULL,
+    title = "Total number of views, for a few selected Ethiopian YouTube Channels",
+    subtitle = subtitle, caption = caption_text
+  ) +
+  coord_cartesian(clip = "off") +
+  theme_minimal(base_family = "serif") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = .9 * fsize),
+    axis.title.x = element_markdown(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(size = fsize, face = "bold"),
+    plot.subtitle = element_markdown(size = .9 * fsize, face = "italic"),
+    plot.caption = element_markdown(face = "italic", lineheight = 1.2),
+    plot.background = element_rect(fill = "gray97", color = NA),
+    plot.margin = margin(2, 2, 2, 2, unit = "mm")
+  ) -> p_latest
+
+p_latest
+```
+
+```{r}
+# save figure ----
+png_file = sprintf("figs/channels-plot_views_%s.png", retrieved_at)
+ggsave(png_file, p_latest, ragg::agg_png, width = 8, height = 6, dpi = 300)
+# knitr::include_graphics(png_file)
+```
+
+```{r}
+scale_exp = -3
+axis_label = "subscriber"
+data_latest |>
+  transform(title = reorder(title, subscriberCount)) |>
+  ggplot(aes(subscriberCount, title)) +
+  geom_col(fill = "#55bdb4", alpha = .5, width = .8) +
+  geom_text(aes(label = scales::label_comma()(subscriberCount)), hjust = -0.05) +
+  scale_x_continuous(
+    labels = scales::label_number(scale = 10^scale_exp, suffix="k"),
+    expand = expansion(c(0.001, 0.12))
+    ) +
+  labs(
+    x = sprintf(
+      "<span>#%ss (in 10<sup>%s</sup>)</span>",
+      tools::toTitleCase(axis_label), -scale_exp
+      ),
+    y = NULL,
+    title = sprintf(
+      "Total number of %ss as of <span style='color:red;'>%s</span>",
+      axis_label, retrieved_at
+      ),
+    caption = sprintf(
+"%2$s, and <span>%1$s counts returned by the API are rounded down to<br>three significant figures for %1$s counts greater than 1000 %1$ss.</span>",
+axis_label, caption_text)
+  ) +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_markdown(),
+    plot.title = element_markdown(face = "bold"),
+    plot.subtitle = element_markdown(face = "italic"),
+    plot.caption = element_markdown(face = "italic", hjust = 0, lineheight = 1.2, margin = margin(r=4)),
+    plot.margin = margin(t=2, r=2, b=2, l=2),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+# save figure ----
+png_file = sprintf("figs/channels-plot_subscribers_%s.png", retrieved_at)
+ggsave(png_file, last_plot(), ragg::agg_png, width = 8, height = 6, dpi = 300)
+#knitr::include_graphics(png_file)
+
+```
+
+
+
+```{r}
+# bar_plot(data_latest, viewCount, title, scales::label_comma()(viewCount))
+```
+
+
+```{r}
+weekly_ts_plot <-
+  function(data, date_var, series_var, ..., geom.point.pars = list(), geom.line.pars = list()) {
+    default.line.pars = list(linewidth = 1.01, color = "#55bdb4")
+    default.point.pars = list(size = 9 / .pt, color = "#55bdb4")
+    ggplot(data, mapping = aes(x = {{ date_var }}, y = {{ series_var }}, ...)) +
+      do.call("geom_line", modifyList(default.line.pars, geom.line.pars)) +
+      do.call("geom_point", modifyList(default.point.pars, geom.point.pars)) +
+      xlab("Date") +
+      scale_y_continuous(labels = scales::label_number(scale = 1e-3, suffix = "k")) +
+      scale_x_date(
+        date_breaks = "2 days",
+        date_labels = "%b %d",
+        expand = expansion(c(0.01, 0.01))
+      )
+  }
+```
+
+```{r}
+ p = channels_data |>
+  subset(retrievedAt >= "2023-01-01") |>
+  _[order(retrievedAt, title),
+    .(retrievedAt = as.Date(retrievedAt), daily_views = viewCount - shift(viewCount)), title
+   ] |>
+  weekly_ts_plot(retrievedAt, daily_views) +
+  ylab(expression(Delta ~ "Total Views"))
+```
+
+
+
+```{r}
+#| label: table
+data_latest[, .(title, viewCount, subscriberCount, videoCount, videoCount, publishedAt, age)] |>
+  kableExtra::kable(booktabs = TRUE, fontsize = 10) |>
+  kableExtra::kable_styling(bootstrap_options = c("striped", "bordered"))
+```

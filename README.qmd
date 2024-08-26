@@ -45,7 +45,7 @@ channels are more popular.
 
 ```{r}
 #| label: example-snapshot-stats
-file_path = dir("data/", "channels-data_\\d{2}-\\d{4}[.]csv", full.names = TRUE) |>
+file_path = dir("data/", "channels-data_\\d{4}-\\d{2}[.]csv", full.names = TRUE) |>
   sort(decreasing = TRUE) |>
   head(1)
 stats = read.csv(file_path)
@@ -126,7 +126,7 @@ knitr::kable(caption = sprintf("Snapshot of stats as of %s", latest_time))
 3.  Run the  `make-plots.R`  script to generate an interactive chart and
     save it as  chart.html.
 
-4.  Install Quarto and use it to render the  chart.qmd  file.
+4.  Install Quarto and use it to render the  `analysis.qmd`  file.
 
 # Contributing {#contributing}
 
