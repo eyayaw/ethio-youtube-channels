@@ -163,8 +163,8 @@ def main():
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
     # put each month data separately, otherwise we'll have a huge csv file
-    mon_year = datetime.now(timezone.utc).strftime("%m-%Y")
-    out_file = f"{out_dir}/channels-data_{mon_year}.csv"
+    year_mon = datetime.now(timezone.utc).strftime("%Y-%m")
+    out_file = f"{out_dir}/channels-data_{year_mon}.csv"
 
     # get channels stats and write/append them
     try:
