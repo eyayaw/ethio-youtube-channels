@@ -2,8 +2,7 @@ import csv
 import os
 from googleapiclient.discovery import build
 from datetime import datetime, timezone
-from utils import flatten_dict, write_to_csv
-from itertools import batched
+from utils import flatten_dict, write_to_csv, batched
 
 # Constants
 CSV_CHANNELS_LIST_PATH = "channels-list.csv"
