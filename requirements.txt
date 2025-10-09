@@ -48,3 +48,5 @@ uritemplate==4.1.1
     # via google-api-python-client
 urllib3==2.2.2
     # via requests
+streamlit==1.46.1
+seaborn==0.13.2
