@@ -2,8 +2,11 @@ name: collect
 
 on:
   schedule:
-    # GitHub delays or drops scheduled runs most at the top of the hour. The longest delay seen
-    # here was 7 h 45 min, and 11:37 UTC leaves 12 hours before the UTC date changes.
+    # GitHub delays scheduled runs under high load, which includes the start of every hour, and
+    # may drop them (checked 2026-11-11):
+    # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
+    # collect.py keeps one run per UTC date, and 11:37 UTC leaves 12 hours of delay before that
+    # date changes.
     - cron: '37 11 * * *'
   workflow_dispatch:
 

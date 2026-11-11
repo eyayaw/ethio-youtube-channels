@@ -4,9 +4,10 @@
 """
 Collect today's YouTube statistics for the channels in channels-list.csv.
 
-A run appends one row per channel to data/stats/YYYY-MM.csv for the current UTC month, refreshes
-data/channels.jsonl, and rewrites the table between the stats markers in README.md. On GitHub
-Actions, it also sets the step output `missing` to the channels that returned no data.
+A run appends one row per returned channel to data/stats/YYYY-MM.csv for the current UTC month,
+refreshes data/channels.jsonl, and rewrites the table between the stats markers in README.md. It
+does nothing when that month's file already holds a run from the current UTC date. On GitHub
+Actions, it also sets the step output `missing` to the listed channels that returned no data.
 """
 
 import csv
@@ -29,13 +30,18 @@ STATS_FIELDS = ["retrieved_at", "channel_id", "title", "views", "subscribers", "
 TABLE_START = "<!-- stats:start -->"
 TABLE_END = "<!-- stats:end -->"
 # https://developers.google.com/youtube/v3/docs/channels/list (checked 2026-11-11): a call costs
-# one quota unit and takes a comma-separated list of channel ids.
+# one quota unit and takes a comma-separated list of channel ids. The page states no limit on that
+# list, but a call with more than 50 ids fails.
 API_URL = "https://www.googleapis.com/youtube/v3/channels"
 IDS_PER_CALL = 50
 
 
 def fetch(ids: list[str], key: str) -> list[dict]:
-    """Return the channel resources for ids. A terminated or deleted channel is absent."""
+    """
+    Return the channel resources for ids, or exit on an HTTP error.
+
+    A terminated or deleted channel is absent from the result.
+    """
     items = []
     for batch in batched(ids, IDS_PER_CALL):
         query = urllib.parse.urlencode(
@@ -80,7 +86,7 @@ def main() -> None:
         sys.exit("Set YOUTUBE_DATA_API_V3_KEY to a YouTube Data API v3 key.")
     readme = README.read_text(encoding="utf-8")
     if not 0 <= readme.find(TABLE_START) < readme.find(TABLE_END):
-        sys.exit(f"{README} needs a {TABLE_START} line followed by a {TABLE_END} line.")
+        sys.exit(f"{README} needs a {TABLE_START} marker followed by a {TABLE_END} marker.")
     retrieved_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     today = retrieved_at[:10]
     stats_file = STATS_DIR / f"{retrieved_at[:7]}.csv"
@@ -95,7 +101,7 @@ def main() -> None:
     items = sorted(fetch(ids, key), key=lambda item: item["id"])
     missing = sorted(set(ids) - {item["id"] for item in items})
     if missing:
-        print(f"No data for {len(missing)} channels: {', '.join(missing)}", file=sys.stderr)
+        print(f"Listed channels with no data: {', '.join(missing)}", file=sys.stderr)
 
     STATS_DIR.mkdir(parents=True, exist_ok=True)
     with stats_file.open("a", newline="", encoding="utf-8") as f:
@@ -105,7 +111,8 @@ def main() -> None:
         for item in items:
             stats = item["statistics"]
             # https://developers.google.com/youtube/v3/docs/channels (checked 2026-11-11): a
-            # channel with hiddenSubscriberCount set may omit subscriberCount.
+            # channel can hide its subscriber count (hiddenSubscriberCount), and the page does
+            # not say whether subscriberCount is then present, so a missing count stays empty.
             writer.writerow(
                 [
                     retrieved_at,

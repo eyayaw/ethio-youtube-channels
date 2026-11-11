@@ -1,9 +1,9 @@
 # Ethiopian Political YouTube Channels Daily Statistics
 
-A daily record, since December 29, 2022, of the view, subscriber, and video counts of Ethiopian
-YouTube channels that cover Ethiopian politics. A GitHub Actions job queries the
-[YouTube Data API v3](https://developers.google.com/youtube/v3/docs/channels/list) once a day
-and commits the result, so the git history records every change to the data.
+This repository records the view, subscriber, and video counts of YouTube channels that cover
+Ethiopian politics, once a day since December 29, 2022. A GitHub Actions job queries the
+[YouTube Data API v3](https://developers.google.com/youtube/v3/docs/channels/list) and commits
+the result.
 
 <details>
 <summary>Latest statistics</summary>
@@ -69,13 +69,15 @@ files share these columns:
 | `title` | Channel title at that time, which records renames |
 | `views`, `subscribers`, `videos` | Counts the API reported |
 
-The API rounds subscriber counts down to three significant figures. The job is scheduled for
-11:37 UTC, but GitHub can delay a scheduled run by hours or drop it, so a few days have no row
-and older runs vary in time of day. A channel that is terminated or deleted stops appearing.
+The API rounds subscriber counts down to three significant figures. The job runs at 11:37 UTC,
+and ran at 23:01 UTC until November 2026. GitHub can delay a scheduled run by hours or drop it,
+so the time of day varies, a few dates have no run, and a few have two. A channel that is
+terminated or deleted stops appearing.
 
-`data/channels.jsonl` holds one JSON object per channel with its `handle`, `title`,
-`published_at`, `country`, and `description`, and every run refreshes it. A channel the API no
-longer returns keeps its last known details.
+`data/channels.jsonl` holds one JSON object per channel with its `channel_id`, `handle`, `title`,
+`published_at`, `country`, and `description`. Every run overwrites each returned channel's
+object, so earlier titles and descriptions live in the git history. A channel the API no longer
+returns keeps its last known details.
 
 Read both with [DuckDB](https://duckdb.org):
 
@@ -89,7 +91,8 @@ limit 10;
 
 ## Collect your own
 
-`collect.py` needs only the Python standard library. List the channels in `channels-list.csv`
+`collect.py` needs Python 3.12 or later and nothing outside its standard library. List the
+channels in `channels-list.csv`
 under a `channel_id` column, get an
 [API key](https://developers.google.com/youtube/registering_an_application), and run:
 
@@ -98,11 +101,14 @@ export YOUTUBE_DATA_API_V3_KEY=your_api_key
 uv run collect.py
 ```
 
-Each run also rewrites the table between the `stats` markers in `README.md`, and stops before
-calling the API when the markers are missing. A second run on the same UTC date does nothing.
-The run lists on stderr the channels the API no longer returns. In a fork, store the key as the
-`YOUTUBE_DATA_API_V3_KEY` repository secret, and `.github/workflows/actions.yml` collects daily
-and opens an issue for each listed channel that returns no data, unless an open issue names it.
+Each run rewrites the table between the `stats` markers in `README.md` and exits before calling
+the API when the markers are missing. A second run on the same UTC date does nothing. The run
+prints to stderr the id of each listed channel that returned no data.
+
+In a fork, store the key as the `YOUTUBE_DATA_API_V3_KEY` repository secret and enable the
+`collect` workflow on the Actions tab, because GitHub disables scheduled workflows in forks by
+default. The workflow then collects daily and opens an issue for each listed channel that
+returns no data, unless an open issue has that channel id in its title.
 
 ## Inspired by
 
