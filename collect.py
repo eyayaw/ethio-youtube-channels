@@ -5,7 +5,8 @@
 Collect today's YouTube statistics for the channels in channels-list.csv.
 
 A run appends one row per channel to data/stats/YYYY-MM.csv for the current UTC month, refreshes
-data/channels.jsonl, and rewrites the table between the stats markers in README.md.
+data/channels.jsonl, and rewrites the table between the stats markers in README.md. On GitHub
+Actions, it also sets the step output `missing` to the channels that returned no data.
 """
 
 import csv
@@ -141,6 +142,11 @@ def main() -> None:
     table = render_table(items, retrieved_at)
     README.write_text(f"{before}{TABLE_START}\n\n{table}\n\n{TABLE_END}{after}", encoding="utf-8")
     print(f"Saved {len(items)} of {len(ids)} channels at {retrieved_at}.")
+
+    if missing and "GITHUB_OUTPUT" in os.environ:
+        missing_channels = [channels.get(c, {"channel_id": c}) for c in missing]
+        with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+            f.write(f"missing={json.dumps(missing_channels, ensure_ascii=False)}\n")
 
 
 if __name__ == "__main__":

@@ -101,7 +101,8 @@ uv run collect.py
 Each run also rewrites the table between the `stats` markers in `README.md`, and stops before
 calling the API when the markers are missing. A second run on the same UTC date does nothing.
 The run lists on stderr the channels the API no longer returns. In a fork, store the key as the
-`YOUTUBE_DATA_API_V3_KEY` repository secret, and `.github/workflows/actions.yml` collects daily.
+`YOUTUBE_DATA_API_V3_KEY` repository secret, and `.github/workflows/actions.yml` collects daily
+and opens an issue for each listed channel that returns no data, unless an open issue names it.
 
 ## Inspired by
 

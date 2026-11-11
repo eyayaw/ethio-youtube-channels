@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   collect:
@@ -17,6 +18,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: collect
+        id: collect
         env:
           YOUTUBE_DATA_API_V3_KEY: ${{ secrets.YOUTUBE_DATA_API_V3_KEY }}
         run: python3 collect.py
@@ -28,3 +30,21 @@ jobs:
           git add data README.md
           git commit -m "updated for date: $(date -u +%F)" || echo "No changes to commit"
           git push
+
+      # Titles come from YouTube, so they reach the shell through env and jq, never through ${{ }}.
+      - name: open an issue for each channel that returned no data
+        if: steps.collect.outputs.missing != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MISSING: ${{ steps.collect.outputs.missing }}
+        run: |
+          jq -c '.[]' <<< "$MISSING" | while read -r channel; do
+            id=$(jq -r .channel_id <<< "$channel")
+            name=$(jq -r '.title // .channel_id' <<< "$channel")
+            open=$(gh issue list --state open --search "\"$id\" in:title" --json number --jq length)
+            if [ "$open" = 0 ]; then
+              url="https://www.youtube.com/channel/$id"
+              gh issue create --title "No data for channel: $name ($id)" \
+                --body "The API returned no data for $url on $(date -u +%F). Once you confirm the channel is gone, remove it from channels-list.csv."
+            fi
+          done
