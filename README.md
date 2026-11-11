@@ -70,7 +70,7 @@ files share these columns:
 | `views`, `subscribers`, `videos` | Counts the API reported |
 
 The API rounds subscriber counts down to three significant figures. The job is scheduled for
-23:01 UTC, but GitHub can delay a scheduled run by hours or drop it, so a few days have no row
+11:37 UTC, but GitHub can delay a scheduled run by hours or drop it, so a few days have no row
 and older runs vary in time of day. A channel that is terminated or deleted stops appearing.
 
 `data/channels.jsonl` holds one JSON object per channel with its `handle`, `title`,

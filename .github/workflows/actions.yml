@@ -2,7 +2,10 @@ name: collect
 
 on:
   schedule:
-    - cron: '01 23 * * *'
+    # GitHub delays or drops scheduled runs most at the top of the hour. The longest delay seen
+    # here was 7 h 45 min, and 11:37 UTC leaves 12 hours before the UTC date changes.
+    - cron: '37 11 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
