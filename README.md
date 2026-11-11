@@ -1,7 +1,3 @@
-
-
-<!-- README.md is generated from README.qmd. Please edit that file -->
-
 # Ethiopian Political YouTube Channels Daily Statistics
 
 This repository contains a Python script that collects daily statistics,
@@ -11,8 +7,7 @@ heavily discuss Ethiopian politics.
 
 The script `main.py` has been running since `January 01, 2023`, see
 [.`/data/channels-data_01-2023.csv`](./data/channels-data_01-2023.csv).
-The repo also includes R scripts for generating charts based on the
-collected data. You can use this repo to collect daily statistics of
+You can use this repo to collect daily statistics of
 other YouTube channels, see the [Usage](#usage) section below.
 
 ## Table of Contents
@@ -21,7 +16,6 @@ other YouTube channels, see the [Usage](#usage) section below.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Visualizing Data](#visualizing-data)
 - [Contributing](#contributing)
 
 ## Overview
@@ -84,8 +78,6 @@ Snapshot of stats as of 2024-08-01 23:05:10
 - Python 3.6 or higher
 - [google-api-python-client](https://github.com/googleapis/google-api-python-client)
   package
-- R dependencies: `data.table` and `ggplot2`
-- [Quarto](https://quarto.org) (for rendering chart.qmd)
 
 ## Installation
 
@@ -134,19 +126,6 @@ Snapshot of stats as of 2024-08-01 23:05:10
     the channels given in `channels-list.csv` will be written to
     `data/channels-info.csv`, and will be updated when new channels are
     added to the list.
-
-# Visualizing Data
-
-1.  Install the required R packages by running the following command in
-    the R console: `install.packages(c("ggplot2", "data.table"))`
-
-2.  Open the  `make-plots.R`  script and modify the input file name to
-    match the latest CSV file in the  data  folder.
-
-3.  Run the  `make-plots.R`  script to generate an interactive chart and
-    save it as  chart.html.
-
-4.  Install Quarto and use it to render the  `analysis.qmd`  file.
 
 # Contributing
 
