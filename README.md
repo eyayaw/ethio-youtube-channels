@@ -117,8 +117,8 @@ which needs no API key.
 
 In a fork, store the key as the `YOUTUBE_DATA_API_V3_KEY` repository secret and enable the
 `collect` workflow on the Actions tab, because GitHub disables scheduled workflows in forks by
-default. The workflow then collects daily and opens an issue for each listed channel that
-returns no data, unless an open issue has that channel id in its title.
+default. The workflow then collects daily and opens an issue labeled `no-data` for each listed
+channel that returns no data, unless an open issue has that channel id in its title.
 
 ## Inspired by
 

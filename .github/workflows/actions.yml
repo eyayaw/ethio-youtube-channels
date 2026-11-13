@@ -41,13 +41,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           MISSING: ${{ steps.collect.outputs.missing }}
         run: |
+          # gh issue create fails on a label the repository lacks, as in a fresh fork.
+          gh label create no-data --force --color B60205 \
+            --description "The API returned no data for a listed channel"
           jq -c '.[]' <<< "$MISSING" | while read -r channel; do
             id=$(jq -r .channel_id <<< "$channel")
             name=$(jq -r '.title // .channel_id' <<< "$channel")
             open=$(gh issue list --state open --search "\"$id\" in:title" --json number --jq length)
             if [ "$open" = 0 ]; then
               url="https://www.youtube.com/channel/$id"
-              gh issue create --title "No data for channel: $name ($id)" \
+              gh issue create --label no-data --title "No data for channel: $name ($id)" \
                 --body "The API returned no data for $url on $(date -u +%F). Once you confirm the channel is gone, remove it from channels-list.csv."
             fi
           done
