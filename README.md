@@ -91,9 +91,8 @@ limit 10;
 
 ## Collect your own
 
-`collect.py` needs Python 3.12 or later and nothing outside its standard library. List the
-channels in `channels-list.csv`
-under a `channel_id` column, get an
+`collect.py` uses only stdlib Python.
+List the channels in `channels-list.csv` under a `channel_id` column, get an
 [API key](https://developers.google.com/youtube/registering_an_application), and run:
 
 ```bash
