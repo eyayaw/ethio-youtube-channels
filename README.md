@@ -104,6 +104,17 @@ Each run rewrites the table between the `stats` markers in `README.md` and exits
 the API when the markers are missing. A second run on the same UTC date does nothing. The run
 prints to stderr the id of each listed channel that returned no data.
 
+To look up the channel id for a handle, use the same API key:
+
+```bash
+curl -s "https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=@VOAAmharic&key=$YOUTUBE_DATA_API_V3_KEY" \
+  | jq -r '.items[0].id'
+```
+
+Or use the
+[StreamWeasels converter](https://www.streamweasels.com/tools/youtube-channel-id-and-user-id-convertor/),
+which needs no API key.
+
 In a fork, store the key as the `YOUTUBE_DATA_API_V3_KEY` repository secret and enable the
 `collect` workflow on the Actions tab, because GitHub disables scheduled workflows in forks by
 default. The workflow then collects daily and opens an issue for each listed channel that
