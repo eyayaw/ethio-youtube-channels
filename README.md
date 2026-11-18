@@ -10,48 +10,48 @@ the result.
 
 <!-- stats:start -->
 
-Latest run: 2026-11-17T20:00:08Z, 38 channels.
+Latest run: 2026-11-18T19:31:57Z, 38 channels.
 
 | Channel | Subscribers | Views | Videos |
 |:---|---:|---:|---:|
-| [ebstv worldwide](https://www.youtube.com/channel/UCVcc_sbg3AcXLV9vVufJrGg) | 3,740,000 | 2,148,053,071 | 40,955 |
-| [Donkey Tube](https://www.youtube.com/channel/UCqGE-jrAMzhipIWivRsaI5A) | 3,330,000 | 680,804,468 | 2,168 |
-| [EBC](https://www.youtube.com/channel/UCOhrz3uRCOHmK6ueUstw7_Q) | 2,210,000 | 690,056,798 | 85,488 |
-| [Fana Television](https://www.youtube.com/channel/UCZtXd8pSeqURf5MT2fqE51g) | 2,000,000 | 577,609,140 | 68,391 |
-| [Ethio Forum ኢትዮ ፎረም](https://www.youtube.com/channel/UCXUFyN9Ys5tiIHgJFQKRJvA) | 1,530,000 | 781,173,821 | 4,088 |
-| [Andafta](https://www.youtube.com/channel/UCwMHDoJO6cHO6LN1BItFsPQ) | 1,200,000 | 387,696,341 | 10,226 |
-| [Feta Daily News](https://www.youtube.com/channel/UCgBnBckSLo6-uAiejtnEycQ) | 1,180,000 | 408,149,435 | 3,415 |
-| [OMN](https://www.youtube.com/channel/UCmAnzjcjIgtWuE6AnBCViTg) | 1,000,000 | 186,799,321 | 14,915 |
-| [ESATtv Ethiopia](https://www.youtube.com/channel/UCSYM-vgRrMYsZbG-Z7Kz0Pw) | 778,000 | 223,243,703 | 14,673 |
-| [Dawit Dreams](https://www.youtube.com/channel/UCb3euYUGSY7REtF8NDsMLsA) | 701,000 | 74,782,213 | 1,334 |
-| [ዓባይ ዜና - Abbay News](https://www.youtube.com/channel/UC6bam4pQbuUgXnmyEFlSpNA) | 699,000 | 62,156,392 | 3,173 |
-| [Fana Entertainment ](https://www.youtube.com/channel/UC4yEV6VBe0Emu8sMpyij0uQ) | 632,000 | 87,774,795 | 26,004 |
-| [EMS (Ethiopian Media Services)](https://www.youtube.com/channel/UCCJbY4YdJIUk7Lygrkg5IRA) | 612,000 | 201,155,217 | 5,118 |
-| [Roha ](https://www.youtube.com/channel/UCDXU7RuIQc0xRKJyP0ZTZaQ) | 452,000 | 139,236,803 | 4,152 |
-| [Reyot](https://www.youtube.com/channel/UCPVr1rrKl8pXVFi-rrqzS1g) | 442,000 | 105,356,334 | 2,947 |
-| [Ethio News - ኢትዮ ኒውስ](https://www.youtube.com/channel/UCelbYFUaQW3eb9sg3004ZGw) | 419,000 | 107,643,742 | 2,982 |
-| [Tigrai Media House](https://www.youtube.com/channel/UCBvvcSYeDriczyImdI1qZWw) | 390,000 | 164,065,203 | 6,888 |
-| [EthioTube](https://www.youtube.com/channel/UCCk2vUhB0SyQhA6JXyjXHEg) | 345,000 | 51,540,228 | 1,976 |
-| [MERI PODCAST](https://www.youtube.com/channel/UCzKNuQ80qNSpt2x-7dsazJg) | 260,000 | 21,689,524 | 211 |
-| [Dejaf TV](https://www.youtube.com/channel/UCdQ-5b2xJiCWgxinWo4NX7w) | 221,000 | 17,103,306 | 134 |
-| [VOA Amharic](https://www.youtube.com/channel/UC5OePohJjdkd0Uwm3r1cThA) | 211,000 | 17,740,769 | 8,177 |
-| [DW Amharic](https://www.youtube.com/channel/UC3-RNH75BEZslJLEoIAxa2A) | 208,000 | 13,024,449 | 1,443 |
-| [Ethio Focus _ኢትዮ ፎከስ](https://www.youtube.com/channel/UC_m5g0TeOmYTPb535BLWd9Q) | 187,000 | 44,749,972 | 1,284 |
-| [GEBEYANU](https://www.youtube.com/channel/UCb9fEB6StrknyRiSSzQ7H0A) | 172,000 | 16,778,065 | 932 |
-| [Addis Compass Media / ACM / አዲስ  ኮምፓስ  ሚዲያ](https://www.youtube.com/channel/UCwUJ_Zli745ZoImP4IljpYg) | 144,000 | 35,754,262 | 482 |
+| [ebstv worldwide](https://www.youtube.com/channel/UCVcc_sbg3AcXLV9vVufJrGg) | 3,750,000 | 2,148,719,800 | 40,974 |
+| [Donkey Tube](https://www.youtube.com/channel/UCqGE-jrAMzhipIWivRsaI5A) | 3,340,000 | 680,914,283 | 2,174 |
+| [EBC](https://www.youtube.com/channel/UCOhrz3uRCOHmK6ueUstw7_Q) | 2,210,000 | 690,297,666 | 85,515 |
+| [Fana Television](https://www.youtube.com/channel/UCZtXd8pSeqURf5MT2fqE51g) | 2,000,000 | 577,714,618 | 68,419 |
+| [Ethio Forum ኢትዮ ፎረም](https://www.youtube.com/channel/UCXUFyN9Ys5tiIHgJFQKRJvA) | 1,530,000 | 781,500,005 | 4,091 |
+| [Andafta](https://www.youtube.com/channel/UCwMHDoJO6cHO6LN1BItFsPQ) | 1,200,000 | 387,725,266 | 10,230 |
+| [Feta Daily News](https://www.youtube.com/channel/UCgBnBckSLo6-uAiejtnEycQ) | 1,180,000 | 408,253,257 | 3,417 |
+| [OMN](https://www.youtube.com/channel/UCmAnzjcjIgtWuE6AnBCViTg) | 1,000,000 | 186,836,483 | 14,916 |
+| [ESATtv Ethiopia](https://www.youtube.com/channel/UCSYM-vgRrMYsZbG-Z7Kz0Pw) | 778,000 | 223,246,827 | 14,678 |
+| [Dawit Dreams](https://www.youtube.com/channel/UCb3euYUGSY7REtF8NDsMLsA) | 702,000 | 74,790,723 | 1,334 |
+| [ዓባይ ዜና - Abbay News](https://www.youtube.com/channel/UC6bam4pQbuUgXnmyEFlSpNA) | 700,000 | 62,189,274 | 3,175 |
+| [Fana Entertainment ](https://www.youtube.com/channel/UC4yEV6VBe0Emu8sMpyij0uQ) | 632,000 | 87,787,733 | 26,005 |
+| [EMS (Ethiopian Media Services)](https://www.youtube.com/channel/UCCJbY4YdJIUk7Lygrkg5IRA) | 612,000 | 201,380,256 | 5,122 |
+| [Roha ](https://www.youtube.com/channel/UCDXU7RuIQc0xRKJyP0ZTZaQ) | 452,000 | 139,309,625 | 4,155 |
+| [Reyot](https://www.youtube.com/channel/UCPVr1rrKl8pXVFi-rrqzS1g) | 442,000 | 105,373,931 | 2,948 |
+| [Ethio News - ኢትዮ ኒውስ](https://www.youtube.com/channel/UCelbYFUaQW3eb9sg3004ZGw) | 419,000 | 107,649,548 | 2,983 |
+| [Tigrai Media House](https://www.youtube.com/channel/UCBvvcSYeDriczyImdI1qZWw) | 390,000 | 164,066,618 | 6,888 |
+| [EthioTube](https://www.youtube.com/channel/UCCk2vUhB0SyQhA6JXyjXHEg) | 345,000 | 51,543,747 | 1,976 |
+| [MERI PODCAST](https://www.youtube.com/channel/UCzKNuQ80qNSpt2x-7dsazJg) | 260,000 | 21,705,315 | 212 |
+| [Dejaf TV](https://www.youtube.com/channel/UCdQ-5b2xJiCWgxinWo4NX7w) | 221,000 | 17,110,505 | 134 |
+| [VOA Amharic](https://www.youtube.com/channel/UC5OePohJjdkd0Uwm3r1cThA) | 211,000 | 17,741,309 | 8,177 |
+| [DW Amharic](https://www.youtube.com/channel/UC3-RNH75BEZslJLEoIAxa2A) | 209,000 | 13,034,678 | 1,446 |
+| [Ethio Focus _ኢትዮ ፎከስ](https://www.youtube.com/channel/UC_m5g0TeOmYTPb535BLWd9Q) | 187,000 | 44,784,391 | 1,281 |
+| [GEBEYANU](https://www.youtube.com/channel/UCb9fEB6StrknyRiSSzQ7H0A) | 172,000 | 16,779,407 | 932 |
+| [Addis Compass Media / ACM / አዲስ  ኮምፓስ  ሚዲያ](https://www.youtube.com/channel/UCwUJ_Zli745ZoImP4IljpYg) | 144,000 | 35,773,597 | 484 |
 | [Zara Media Network - ዛራ](https://www.youtube.com/channel/UCJ61rOk0c0b0COn0qOOo1aQ) | 140,000 | 839,481 | 0 |
-| [Ethio Selam_ኢትዮ ሰላም](https://www.youtube.com/channel/UCoVL5YOr2KdnYNspQf3s5uw) | 125,000 | 14,599,334 | 1,363 |
-| [Adebabay Media](https://www.youtube.com/channel/UC-kDmfnktrzc_SGpS9ulrXw) | 114,000 | 15,677,106 | 1,205 |
-| [Mengizem Media ምንጊዜም ሚዲያ](https://www.youtube.com/channel/UCZvMKrP8XmP9GAHMloucOaA) | 103,000 | 14,273,113 | 4,036 |
-| [Horizon Free Media    ሆራይዝን ነፃ ሚዲያ](https://www.youtube.com/channel/UCNgwbT7BCcppLG3zDm9f5UA) | 102,000 | 12,466,935 | 562 |
-| [TELES NEWS -ጠለስ ኒውስ](https://www.youtube.com/channel/UCR9FW-7YPXYQE4U6UkuXM4A) | 94,600 | 17,209,592 | 681 |
-| [Wazema Radio](https://www.youtube.com/channel/UCQwdCM4dBMgxPh0UZa8PIow) | 72,500 | 4,197,667 | 1,382 |
-| [Alpha Media አልፋ ሚዲያ](https://www.youtube.com/channel/UCUyDe7EvbwwDRjyjUFU5Zhw) | 56,900 | 9,712,891 | 1,719 |
-| [Terara Network](https://www.youtube.com/channel/UC_f89AbX5NPU77YaoaSKRSg) | 53,800 | 3,839,643 | 285 |
-| [Gugut Podcast](https://www.youtube.com/channel/UCkOxp2i-ltA9jj0uSamcFWQ) | 52,900 | 5,875,899 | 277 |
-| [Mager Media - ማገር ](https://www.youtube.com/channel/UCilWrw2C8_VkFZ2tE5eKpdQ) | 37,100 | 2,569,099 | 450 |
-| [Arat Kilo Media አራት ኪሎ ሚዲያ ](https://www.youtube.com/channel/UCK71ZGx5VYTWw2XQ0F_O0nQ) | 21,100 | 947,031 | 90 |
-| [Finote Godana](https://www.youtube.com/channel/UCsNubCFfRG-jcQcWF9owGTw) | 9,070 | 186,390 | 29 |
+| [Ethio Selam_ኢትዮ ሰላም](https://www.youtube.com/channel/UCoVL5YOr2KdnYNspQf3s5uw) | 125,000 | 14,602,381 | 1,365 |
+| [Adebabay Media](https://www.youtube.com/channel/UC-kDmfnktrzc_SGpS9ulrXw) | 114,000 | 15,677,232 | 1,205 |
+| [Mengizem Media ምንጊዜም ሚዲያ](https://www.youtube.com/channel/UCZvMKrP8XmP9GAHMloucOaA) | 104,000 | 14,278,905 | 4,037 |
+| [Horizon Free Media    ሆራይዝን ነፃ ሚዲያ](https://www.youtube.com/channel/UCNgwbT7BCcppLG3zDm9f5UA) | 102,000 | 12,475,790 | 562 |
+| [TELES NEWS -ጠለስ ኒውስ](https://www.youtube.com/channel/UCR9FW-7YPXYQE4U6UkuXM4A) | 94,600 | 17,213,844 | 682 |
+| [Wazema Radio](https://www.youtube.com/channel/UCQwdCM4dBMgxPh0UZa8PIow) | 72,500 | 4,199,233 | 1,383 |
+| [Alpha Media አልፋ ሚዲያ](https://www.youtube.com/channel/UCUyDe7EvbwwDRjyjUFU5Zhw) | 56,900 | 9,712,920 | 1,719 |
+| [Terara Network](https://www.youtube.com/channel/UC_f89AbX5NPU77YaoaSKRSg) | 53,800 | 3,839,648 | 285 |
+| [Gugut Podcast](https://www.youtube.com/channel/UCkOxp2i-ltA9jj0uSamcFWQ) | 52,900 | 5,876,753 | 278 |
+| [Mager Media - ማገር ](https://www.youtube.com/channel/UCilWrw2C8_VkFZ2tE5eKpdQ) | 37,100 | 2,569,119 | 450 |
+| [Arat Kilo Media አራት ኪሎ ሚዲያ ](https://www.youtube.com/channel/UCK71ZGx5VYTWw2XQ0F_O0nQ) | 21,100 | 947,040 | 90 |
+| [Finote Godana](https://www.youtube.com/channel/UCsNubCFfRG-jcQcWF9owGTw) | 9,070 | 186,392 | 29 |
 
 <!-- stats:end -->
 
